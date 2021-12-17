@@ -17,6 +17,8 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
         "SQLALCHEMY_DATABASE_URI")
 
+    from app.models.board import board
+    from app.models.card import card
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
 
