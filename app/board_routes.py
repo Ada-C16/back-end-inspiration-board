@@ -9,3 +9,11 @@ boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 @boards_bp.route("", methods=["GET"])
 def handle_boards():
     pass
+
+@boards_bp.route("", methods=["POST"])
+def post_board():
+    pass
+
+@boards_bp.route("/<id>/cards", methods=["POST"])
+def get_board_cards(id):
+    pass

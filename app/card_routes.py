@@ -9,3 +9,8 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 @cards_bp.route("", methods=["GET"])
 def handle_cards():
     pass
+
+@cards_bp.route("", methods=["POST"])
+def post_card():
+    pass
+
