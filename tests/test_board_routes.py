@@ -13,13 +13,7 @@ def test_get_boards_one_saved_board(client, one_board):
 
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == [
-        {
-            "id": 1,
-            "title": 'Cool Artists on Instagram',
-            "owner":'Karishma'
-        }
-    ]
+    assert response_body == ['Cool Artists on Instagram']
 
 def test_create_board(client):
     response = client.post("/boards", json={"title": 'Food Board', "owner": 'Juliana'})
@@ -32,6 +26,14 @@ def test_create_board(client):
     assert new_board.board_id == 1
     assert new_board.title == "Food Board"
     assert new_board.owner == 'Juliana'
+
+def test_create_board_failed(client):
+    response = client.post("/boards", json={})
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert "unsuccessful post" in response_body
+    assert Board.query.all() == []
 
 def test_delete_board(client, one_board):
     response = client.delete("/boards/1")

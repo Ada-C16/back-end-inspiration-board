@@ -33,6 +33,14 @@ def test_create_card(client):
     assert new_card.message == "@donutdadd"
     assert new_card.likes_count == 0
 
+def test_create_card_failed(client):
+    response = client.post("/cards", json={})
+    response_body = response.get_json()
+
+    assert response.status_code == 400
+    assert "unsuccessful post" in response_body
+    assert Card.query.all() == []
+
 def test_update_card(client, one_card):
     response = client.put("/cards/1")
     response_body = response.get_json()
