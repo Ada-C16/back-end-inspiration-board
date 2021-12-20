@@ -14,3 +14,6 @@ def handle_cards():
 def post_card():
     pass
 
+@cards_bp.route("/<id>/like", methods=["PUT"])
+def like_card():
+    pass
