@@ -23,7 +23,7 @@ def create_app():
     # from app.models.ExampleModel import ExampleModel
 
     db.init_app(app)
-    migrate.init_app(app, db)
+    migrate.init_app(app, db) 
 
     # Register Blueprints here
     # from .routes import example_bp
