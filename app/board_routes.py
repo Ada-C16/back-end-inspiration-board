@@ -14,6 +14,10 @@ def handle_boards():
 def post_board():
     pass
 
-@boards_bp.route("/<id>/cards", methods=["POST"])
+@boards_bp.route("/<id>", methods=["GET"])
 def get_board_cards(id):
+    pass
+
+@boards_bp.route("/<id>", methods=["DELETE"])
+def delete_board(id):
     pass

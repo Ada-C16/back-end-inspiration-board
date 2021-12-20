@@ -17,3 +17,7 @@ def post_card():
 @cards_bp.route("/<id>/like", methods=["PUT"])
 def like_card():
     pass
+
+@cards_bp.route("/<id>", methods=["DELETE"])
+def delete_card(id):
+    pass
