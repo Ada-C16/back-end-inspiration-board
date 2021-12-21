@@ -5,6 +5,8 @@ class Board (db.Model):
     title = db.Column(db.String)
     owner = db.Column(db.String)
 
+# Need to establish relationship between board and card
+
     def update_attributes(self, request_body):
         self.title = request_body["title"]
         self.owner=request_body["owner"]
