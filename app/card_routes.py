@@ -7,7 +7,7 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 @cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card_by_id(card_id):
-    card= Card.query.get(card_id)
+    card = Card.query.get(card_id)
     if card == None:
         return make_response("Card {card_id} was not found", 404)
 
@@ -16,12 +16,13 @@ def delete_card_by_id(card_id):
         db.session.commit()
         return make_response("Card f{card.id} deleted", 200)
 
-@cards_bp.route("/<card_id>/like", methods=["PUT"])
+@cards_bp.route("/<card_id>/like", methods=["PATCH"])
 def add_like_to_card(card_id):
-    card= Card.query.get(card_id)
+    card = Card.query.get(card_id)
     if card == None:
         return make_response("Card {card_id} was not found", 404)
-
+# are we expecting the front end to send a specfic number or will it be sending
+# a +1 to the likes_count and we need to incremement the variable in the database
     else:
         form_data = request.get_json()
         try:
