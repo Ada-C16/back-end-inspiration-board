@@ -10,7 +10,7 @@ cards_bp = Blueprint ("cards", __name__, url_prefix=("/cards"))
 #CARDS
 #read - GET
 @cards_bp.route("", methods=["GET"])
-def get_card():
+def get_cards():
     cards = Card.query.all()
 
     response = []
@@ -36,6 +36,17 @@ def create_card():
 
         return jsonify(response), 400
 
+@cards_bp.route("/<card_id>", methods=["GET"])
+def get_card(card_id):
+    if not card_id.isnumeric():
+        return jsonify(None), 400
+
+    card = Card.query.get(card_id)
+
+    if not card:
+        return jsonify({'message' : f'Card {card_id} was not found'}), 404
+
+    return jsonify(card.to_dict()), 200
 #delete - DELETE
 
 
