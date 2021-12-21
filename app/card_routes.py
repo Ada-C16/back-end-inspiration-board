@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response
+from sqlalchemy.orm.query import Query
 from app import db
 from app.models.board import Board
 from app.models.card import Card
@@ -21,6 +22,20 @@ def create_card():
     db.session.commit()
 
     return jsonify({"message": new_card.message}), 201
+
+@cards_bp.route("", methods=["GET"])
+# Update enpoint with board id at a later date
+#  "/<board_id>"
+def get_all_cards():
+    all_cards = Card.query.all()
+    output_dicts_list = []
+    for card in all_cards:
+        output_dicts_list.append(
+            {"id":card.card_id,
+            "message":card.message
+            })
+
+    return jsonify(output_dicts_list), 201
 
 
 #copy similar import statements as the ones used in video store
