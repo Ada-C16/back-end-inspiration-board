@@ -48,7 +48,7 @@ def test_delete_board_not_found(client):
     response_body = response.get_json()
 
     assert response.status_code == 404
-    assert response_body == None
+    assert response_body == ''
     assert Board.query.all() == []
 
 def test_get_one_card_from_one_board(client, one_card_belongs_to_one_board):
@@ -56,41 +56,41 @@ def test_get_one_card_from_one_board(client, one_card_belongs_to_one_board):
     response_body = response.get_json()
 
     assert response.status_code == 200
-    assert response_body.title == "Cool Artists on Instagram"
-    assert response_body.owner == "Karishma"
-    assert len(response_body.cards) == 1
+    assert response_body["title"] == "Cool Artists on Instagram"
+    assert response_body["owner"] == "Karishma"
+    assert len(response_body["cards"]) == 1
     assert {
             "id": 1,
             "message": "@pukey.green",
             "likes_count": 0
-            } in response_body.cards
+            } in response_body["cards"]
 
 def test_get_multiple_cards_from_one_board(client, multiple_cards_belong_to_one_board):
     response = client.get("/boards/1")
     response_body = response.get_json()
 
     assert response.status_code == 200
-    assert response_body.title == "Cool Artists on Instagram"
-    assert response_body.owner == "Karishma"
-    assert len(response_body.cards) == 4
+    assert response_body["title"] == "Cool Artists on Instagram"
+    assert response_body["owner"] == "Karishma"
+    assert len(response_body["cards"]) == 4
     assert {
             "id": 1,
             "message": "@cairopaints",
             "likes_count": 0
-    } in response_body.cards
+    } in response_body["cards"]
     assert {
             "id": 2,
             "message": "@queerancestorsproject",
             "likes_count": 0
-    } in response_body.cards
+    } in response_body["cards"]
     assert {
             "id": 3,
             "message": "@rawlzzzart",
             "likes_count": 0
-    } in response_body.cards
+    } in response_body["cards"]
     assert {
             "id": 4,
             "message": "@smalldogbigwurld",
             "likes_count": 0
-    } in response_body.cards
+    } in response_body["cards"]
 
