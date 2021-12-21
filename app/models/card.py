@@ -14,4 +14,14 @@ class Card(db.Model):
 
         return card
 
-    
+    @classmethod
+    def from_dict(cls, request_body):
+        card = Card(
+            message=request_body["message",
+            ],
+            likes_count=request_body["likes_count"]
+        )
+
+        return card 
+
+        
