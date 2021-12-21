@@ -16,8 +16,12 @@ def handle_boards():
             return jsonify(details="Invalid request, a title is required."), 400
         if "owner" not in request_body or request_body["owner"] == "":
             return jsonify(details="Invalid request, an owner is required."), 400
-        new_board = Board(title=request_body["title"],
-                    owner=request_body["owner"])
+
+        print(request_body["title"])
+        print(request_body["owner"])
+        new_board = Board(title=request_body["title"], owner=request_body["owner"])
+
+
 
         db.session.add(new_board)
         db.session.commit()
@@ -40,15 +44,38 @@ def handle_boards():
 # for likes count, will need to have an API for put to update likes
 
 @boards_bp.route("/<id>/cards", methods=["GET", "POST", "DELETE"])
-def handle_board_cards():
+def handle_board_cards(id):
+    board = Board.query.get(id)
+    # add error if board doesn't exist
+
     if request.method == "POST":
         request_body = request.get_json()
-        new_card = Card(message=request_body["message"])
+        if len(request_body["message"]) > 40:
+            return jsonify(details="Message length must be 40 characters or less"), 400
+
+        new_card = Card(message=request_body["message"], likes_count=0, board=board)
 
         db.session.add(new_card)
         db.session.commit()
-
+# **************** created for what???
         return make_response(f"A new card was successfully created for ", 201)
+    
+    if request.method == "GET":
+        
+        cards = board.cards 
+        cards_response = []
+      
+        for card in cards:
+            cards_response.append({
+                "id" : card.id,
+                "message" : card.message,
+                "likes_count" : card.likes_count,
+                "board_id": card.board_id
+            })
+        
+        return jsonify(cards_response), 200
+
+# NEXT STETPS: 1.) create delete method for card and like put/patch method for likes 2.) deploy on heroku and test everything out (back end should deploy before front end)
 
 # How do we connect to the board the card was created under 
 # test if automatically generates through postman 

@@ -1,8 +1,8 @@
-"""adds Card and Board models
+"""empty message
 
-Revision ID: a833794fc822
+Revision ID: d479a89d6371
 Revises: 
-Create Date: 2021-12-18 14:06:08.704202
+Create Date: 2021-12-20 19:35:17.386906
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a833794fc822'
+revision = 'd479a89d6371'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,6 +28,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('message', sa.String(), nullable=True),
     sa.Column('likes_count', sa.Integer(), nullable=True),
+    sa.Column('board_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['board_id'], ['board.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
