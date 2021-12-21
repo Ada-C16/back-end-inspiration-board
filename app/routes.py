@@ -36,6 +36,7 @@ def create_card():
 
         return jsonify(response), 400
 
+#read - GET (1)
 @cards_bp.route("/<card_id>", methods=["GET"])
 def get_card(card_id):
     if not card_id.isnumeric():
@@ -48,6 +49,19 @@ def get_card(card_id):
 
     return jsonify(card.to_dict()), 200
 #delete - DELETE
+@cards_bp.route("/<card_id>", methods=["DELETE"])
+def delete_card(card_id):
+    card = Card.query.get(card_id)
+
+    if not card:
+        return jsonify({'message' : f'Card {card_id} was not found'}), 404
+    
+    db.session.delete(card)
+    db.session.commit()
+    return jsonify({
+        'id': card.card_id,
+        'details': f'Card {card.card_id} succesfully deleted'
+    }), 200
 
 
 
