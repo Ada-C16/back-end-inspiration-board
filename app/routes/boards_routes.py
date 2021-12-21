@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from app.routes.cards_routes import *
+from app.models.board import Board
 from app import db
 
 # example_bp = Blueprint('example_bp', __name__)
@@ -11,7 +12,17 @@ boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 # params: title (string), name (string)
 # returns a dictionary with board data. 
 @boards_bp.route("", methods=["POST"])
-# def write function here....
+def create_new_board (request_body):
+
+    new_board = Board()
+    new_board.update_attributes(request_body)
+
+    db.session.add(new_board)
+    db.session.commit()
+
+    return new_board.board_details(), 201
+
+
 
 # GET /boards Gets a list of all boards.
 # returns a dictionary of boards data.
