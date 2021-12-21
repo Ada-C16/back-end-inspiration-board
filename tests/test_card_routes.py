@@ -42,7 +42,7 @@ def test_create_card_failed(client):
     assert Card.query.all() == []
 
 def test_update_card(client, one_card):
-    response = client.put("/cards/1")
+    response = client.put("/cards/1/like")
     response_body = response.get_json()
 
     assert response.status_code == 200
@@ -53,8 +53,8 @@ def test_update_card(client, one_card):
     assert updated_card.likes_count == 1
 
 def test_update_card_twice(client, one_card):
-    client.put("/cards/1")
-    response = client.put("/cards/1")
+    client.put("/cards/1/like")
+    response = client.put("/cards/1/like")
     response_body = response.get_json()
 
     assert response.status_code == 200
@@ -65,11 +65,11 @@ def test_update_card_twice(client, one_card):
     assert updated_card.likes_count == 2
 
 def test_update_card_not_found(client):
-    response = client.put("/cards/1")
+    response = client.put("/cards/1/like")
     response_body = response.get_json()
 
     assert response.status_code == 404
-    assert response_body == None
+    assert response_body == ''
 
 def test_delete_card(client, one_card):
     response = client.delete("/cards/1")
@@ -84,5 +84,5 @@ def test_delete_card_not_found(client):
     response_body = response.get_json()
 
     assert response.status_code == 404
-    assert response_body == None
+    assert response_body == ''
     assert Card.query.all() == []
