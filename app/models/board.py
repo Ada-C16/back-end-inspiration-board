@@ -5,4 +5,6 @@ class Board(db.Model):
     title = db.Column(db.String)
     owner = db.Column(db.String)
 
+    card = db.relationship("Card", backref="board", passive_deletes=True)
+
     
