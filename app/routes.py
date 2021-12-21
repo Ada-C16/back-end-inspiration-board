@@ -4,7 +4,7 @@ from app.models.card import Card
 from app.models.board import Board
 
 # example_bp = Blueprint('example_bp', __name__)
-board_bp = Blueprint ("boards", __name__, url_prefix=("/boards"))
+boards_bp = Blueprint ("boards", __name__, url_prefix=("/boards"))
 cards_bp = Blueprint ("cards", __name__, url_prefix=("/cards"))
 
 #CARDS
