@@ -10,7 +10,7 @@ class Board(db.Model):
 
     def to_dict(self):
         return{
-            "board_id" : self.board.id,
+            "board_id" : self.board_id,
             "title" : self.title,
             "owner" : self.owner,
         }
@@ -20,7 +20,7 @@ class Board(db.Model):
             "board_id" : self.board.id,
             "title" : self.title,
             "owner" : self.owner,
-            "cards" : [card.card_to_dict_w_goal() for card in self.cards]
+            "cards" : [card.card_to_dict_w_board() for card in self.cards]
         }
     
     @classmethod
