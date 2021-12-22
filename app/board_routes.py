@@ -96,9 +96,10 @@ def get_all_boards():
     return jsonify(response_body), 200
 
 # GET ONE BOARD BY SUPPLYING board_id
-@boards_bp.route("/<board_id>", methods=["GET"])
-def get_one_board(board_id):
-    board = Board.query.get(board_id)
+@boards_bp.route("/<board_ID>", methods=["GET"])
+@validate_board
+def get_one_board(board_ID):
+    board = Board.query.get(board_ID)
 
     if board is None:
         return jsonify(None),404
@@ -110,3 +111,12 @@ def get_one_board(board_id):
     }
 
     return jsonify(response_body), 200
+
+@boards_bp.route("/<board_ID>", methods=["DELETE"])
+@validate_board
+def delete_one_whole_entire_board(board_ID):
+    board = Board.query.get(board_ID)
+    db.session.delete(board)
+    db.session.commit()
+    response = {"message": f"Board {board.title} was deleted"}
+    return response, 200
