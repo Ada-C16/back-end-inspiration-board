@@ -3,10 +3,16 @@ from app import db
 class Card (db.Model):
     card_id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String)
-    likes_count = db.Column(db.Integer)
+    likes_count = db.Column(db.Integer, default=0)
     board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
     board = db.relationship("Board", back_populates="cards")
 
+    def update_likes(self):
+        self.likes_count += 1
+
+    def update_attributes(self, request_body):
+        self.board_id = request_body["board_id"]
+        self.message=request_body["message"]
 
     def card_details(self):
         return {
