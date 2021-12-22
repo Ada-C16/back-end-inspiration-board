@@ -27,11 +27,11 @@ def require_valid_request_body(endpoint):
         # look into arg and kwargs
         request_body = request.get_json()
 
-        if "title" not in request_body and "owner" not in request_body:
+        if request_body["title"]== "" and request_body["owner"]== "":
             return {"details": "Request body must include title and owner."}, 400
-        elif "title" not in request_body:
+        elif request_body["title"]== "":
             return {"details": "Request body must include title."}, 400
-        elif "owner" not in request_body:
+        elif request_body["owner"]== "":
             return {"details": "Request body must include owner."}, 400
         else:
             return endpoint(*args, request_body=request_body, **kwargs)
