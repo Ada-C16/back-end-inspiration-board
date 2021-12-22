@@ -14,7 +14,7 @@ def delete_card_by_id(card_id):
     else:
         db.session.delete(card)
         db.session.commit()
-        return jsonify(card.create_card_dict(), 200)
+        return jsonify("card deleted", 200)
 
 @cards_bp.route("/<card_id>/like", methods=["PATCH"])
 def add_like_to_card(card_id):
