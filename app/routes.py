@@ -3,8 +3,6 @@ from app import db
 from app.models.board import Board
 from app.models.card import Card
 
-# example_bp = Blueprint('example_bp', __name__)
-
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
@@ -29,7 +27,6 @@ def handle_boards():
         return make_response(f"Board {new_board.title} successfully created", 201)
 
     if request.method == "GET":
-        # title_query = request.args.get("title")
         boards = Board.query.all()
         boards_response = []
         for board in boards:
@@ -46,7 +43,6 @@ def handle_boards():
 @boards_bp.route("/<id>/cards", methods=["GET", "POST", "DELETE"])
 def handle_board_cards(id):
     board = Board.query.get(id)
-    # add error if board doesn't exist
 
     if request.method == "POST":
         request_body = request.get_json()
@@ -90,9 +86,4 @@ def handle_cards(id):
 
         return jsonify({"likes_count": card.likes_count }), 200
 
-# NEXT STEPS: 1.) create delete method for card and like put/patch method for likes 2.) deploy on heroku and test everything out (back end should deploy before front end)
 
-# How do we connect to the board the card was created under 
-# test if automatically generates through postman 
-# if not try:
-# new_card.board_id = id
