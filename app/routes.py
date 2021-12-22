@@ -1,22 +1,22 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 from app import db
 from app.models.board import Board
 from app.models.card import Card
 
-# example_bp = Blueprint('example_bp', __name__)
+
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 
 # CREATE
-# A new board
+# Create a new board
 @boards_bp.route("", methods=['POST'])
 def create_board():
     request_body = request.getjson()
     if "name" not in request_body or "title" not in request_body:
         return jsonify("Not Found"), 404
 
-    # name represents "Owners name" in the form on the frontend
+    # 'name' represents "Owners name" in the form on the frontend
     new_board = Board(name=request_body["name"], title=request_body["title"])
 
     db.session.add(new_board)
@@ -25,32 +25,23 @@ def create_board():
     return jsonify(f"Board: {new_board.name} successfully created."), 201
 
 
-#  Create a new card within a board
-@boards_bp.route("/<board_id>/cards", methods=['POST'])
-def create_card(board_id):
-    board = Board.query.get(board_id)
-    if board is None:
-        return jsonify("Not Found"),404
-
+# Create a new card
+@cards_bp.route("", methods=['POST'])
+def create_card():
     request_body = request.getjson()
-    card_ids = request_body["card_ids"]
 
-    for card_id in card_ids:
-        card = Card.query.get(card_id)
-        card.board_id = int(board_id)
+    # 'likes_count by default will be 0 for every new card. Curious how we can hard card this in
+    # so it's not a required request parameter
+    if "title" not in request_body or "message" not in request_body or "likes_count" not in request_body:
+        return jsonify("Not Found"), 404
 
-    new_cards = []
-    for card in board.cards:
-        new_cards.append(card.card_id)
-    # 'new cards' should return all newly created cards within a specific board  
-    response_body = {
-        "id": board.board_id,
-        "card_ids": new_cards,  
-    }
+    # 'title' represents the Board's "Title"
+    new_card = Card(title=request_body["title"], message=request_body["message"], likes_count=request_body["likes_count"])
 
+    db.session.add(new_card)
     db.session.commit()
 
-    return jsonify(response_body), 200
+    return jsonify(f"Card for board: {new_card.title} successfully created."), 201
 
 
 
