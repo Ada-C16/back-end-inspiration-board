@@ -75,16 +75,14 @@ def handle_board_cards(id):
         
         return jsonify(cards_response), 200
 
-@boards_bp.route("/<id>/cards/<card_id>", methods=["GET", "POST", "DELETE"])
-def handle_cards(id, card_id):
-    # board = Board.query.get(id)
-    # cards = board.cards
-    card = Card.query.get(card_id)
+@cards_bp.route("/<id>", methods=["DELETE"])
+def handle_cards(id):
+    card = Card.query.get(id)
     
     if request.method == "DELETE":
         db.session.delete(card)
         db.session.commit()
-        return make_response(f"Card #{card_id} successfully deleted")
+        return make_response(f"Card #{id} successfully deleted")
 # NEXT STETPS: 1.) create delete method for card and like put/patch method for likes 2.) deploy on heroku and test everything out (back end should deploy before front end)
 
 # How do we connect to the board the card was created under 
