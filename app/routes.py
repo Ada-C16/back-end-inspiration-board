@@ -19,10 +19,10 @@ def handle_boards():
 
             db.session.add(new_board)
             db.session.commit()
-            return make_response({"board": {
-                "id": new_board.board_id, 
+            return make_response(
+                {"board id": new_board.board_id, 
                 "title":new_board.title,
-                'owner':new_board.owner}},
+                'owner':new_board.owner},
             201)
 
     elif request.method == "GET":
@@ -31,7 +31,7 @@ def handle_boards():
 
         for board in boards:
             boards_response.append({
-                "id": board.board_id,
+                "board id": board.board_id,
                 "title": board.title,
                 "owner": board.owner
             }) 
@@ -49,12 +49,9 @@ def handle_board(board_id):
         return {"message": f" Board {board_id} not found"}, 404 # For when you enter /5 but there is no board_id of 5 in db
     
     # If valid, then return response abt the specific board
-    return {
-        "board": {
-            "id": board.board_id,
+    return {"board id": board.board_id,
             "title": board.title,
             "owner": board.owner
-        }
     }
 
 @boards_bp.route("/<board_id>/cards", methods= ["POST", "GET"])
@@ -106,9 +103,21 @@ def handle_cards(card_id):
         return {"details": "Invalid data"}, 400 # For when you enter /asdjsaiod instead of a num
 
     if card is None:
-        return {"message": f" Board {card_id} not found"}, 404
+        return {"message": f" Card {card_id} not found"}, 404
     
     db.session.delete(card)
     db.session.commit()
 
     return {"details": f"Card {card_id} was successfully deleted"}
+
+@cards_bp.route("/<card_id>/like", methods= ["PUT"])
+def like_card(card_id):
+    card = Card.query.get(card_id)
+
+    if card is None:
+        return {"message": f" Card {card_id} not found"}, 404
+        
+    card.likes_count += 1
+    db.session.commit()
+
+    return {"details": f"You've added a like to card {card_id}"}
