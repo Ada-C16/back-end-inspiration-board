@@ -37,22 +37,49 @@ def one_board(app):
 
 @pytest.fixture
 def three_boards(app):
-    board_one = Board(
+    db.session.add_all([
+    Board(
         title=BOARD_TITLE,
         owner=BOARD_OWNER
-    )
+    ),
 
-    board_two = Board(
+    Board(
         title = "Second Board",
         owner = "Second Name"
-    )
-
-    board_three = Board(
+    ),
+    Board(
         title = "Third Board",
         owner = "Third Name"
     )
-    db.session.add(board_one)
-    db.session.add(board_two)
-    db.session.add(board_three)
+    ])
+
     db.session.commit()
 
+@pytest.fixture
+def one_card(app):
+    new_card = Card(message = "This is a new card!",)
+    db.session.add(new_card)
+    db.session.commit()
+
+@pytest.fixture
+def three_cards(app):
+    db.session.add_all([
+        Card(message = "This is a new card!"),
+        Card(message = "Second card"),
+        Card(message = "Third card")
+    ])
+    db.session.commit()
+
+@pytest.fixture
+def one_card_belongs_to_one_board(app, one_board, one_card):
+    card = Card.query.first()
+    board = Board.query.first()
+    board.cards.append(card)
+    db.session.commit()
+
+@pytest.fixture
+def three_cards_belong_to_one_board(app, one_board, three_cards):
+    cards = Card.query.all()
+    board = Board.query.first()
+    board.cards.append(cards)
+    db.session.commit()

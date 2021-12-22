@@ -150,4 +150,10 @@ def test_board_not_found(client):
     assert response_body == {
         "message": "Board 3 was not found"}
 
-    
+# def test_create_new_card(client):
+
+# def test_get_cards_one_card(client, one_card):
+
+# def test_get_cards_three_cards(client, three_cards):
+
+# def test_get_no_cards_returns_empty_array(client, one):
