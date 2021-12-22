@@ -1,6 +1,9 @@
 from app import db
+from app.models import board
 
 class Card(db.Model):
     card_id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
-    owner = db.Column(db.String)
+    message = db.Column(db.String)
+    likes_count = db.Column(db.Integer)
+    board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
+    board = db.relationship("Card", back_populates="cards")
