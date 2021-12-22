@@ -6,8 +6,27 @@ from app.models.card import Card
 import requests
 from dotenv import load_dotenv
 load_dotenv()
+from functools import wraps
 
 boards_bp=Blueprint("board", __name__, url_prefix="/board")
+
+# Decorator for validation
+# Can be used for any route that has <board_ID>
+# Updated routes to use <board_ID> because <board_id> was overlapping with model values. 
+# Challange someone to try something similar for GET by card_ID
+# Will explain decorators, args/kwargs, wraps tomorrow. 
+
+def validate_board(board_identity):
+    @wraps(board_identity)
+    def test_for_board (*args, board_ID, **kwargs):
+        board_check = Board.query.get(board_ID)
+        if board_check:
+            return board_identity (*args, board_ID, **kwargs)
+        else:
+            return ({"message":f"Board {board_ID} does not exist",}), 404
+    return test_for_board
+
+
 
 #CREATE ONE BOARD
 @boards_bp.route("", methods=["POST"])
@@ -23,12 +42,14 @@ def create_board():
 
     return jsonify({
         "title" : new_board.title,
-        "owner" : new_board.owner
+        "owner" : new_board.owner,
+        "id" : new_board.board_id
     }), 201
 
 
 #CREATE ONE CARD ON A SPECIFIC BOARD
 @boards_bp.route("/<board_ID>", methods=["POST"])
+@validate_board
 def create_card(board_ID):
     request_body = request.get_json()
     new_card= Card(
@@ -43,7 +64,8 @@ def create_card(board_ID):
     return jsonify({"message": new_card.message,"board_id": board_ID}), 201
 
 #GET ALL CARDS FOR SPECIFIC BOARD BY ID
-@boards_bp.route("/<board_id>", methods=["GET"])
+@boards_bp.route("/<board_ID>", methods=["GET"])
+@validate_board
 def get_all_cards_from_a_board(board_id):
     #trying to get all cards with same board_id
     all_cards = Card.query.filter_by(board_id=board_id)
