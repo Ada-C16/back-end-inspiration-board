@@ -16,17 +16,17 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 # Board needs to exist.
 # params: message
 # likes count could default to 0
-@cards_bp.route("", methods=["POST"])
-@require_valid_request_body
-def create_new_card(request_body):
+# @cards_bp.route("", methods=["POST"])
+# @require_valid_request_body
+# def create_new_card(request_body):
     
-    new_card = Card()
-    new_card.update_attributes(request_body)
+#     new_card = Card()
+#     new_card.update_attributes(request_body)
 
-    db.session.add(new_card)
-    db.session.commit()
+#     db.session.add(new_card)
+#     db.session.commit()
 
-    return new_card.card_details(), 200
+#     return new_card.card_details(), 200
 
 # DELETE /cards/<card_id> Deletes a specific card.
 # **CONSIDER** return a dictionary with card data.

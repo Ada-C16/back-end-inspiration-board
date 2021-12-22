@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify, make_response
 from app.routes.cards_routes import *
 from app.models.board import Board
 from app.models.card import Card
@@ -35,12 +35,27 @@ def get_boards():
 
 
 # GET /boards/<board_id> Gets data for specific board.
+# POST /boards/<board_id> Creates a new card to a specific board
 # returns a dictionary of the board's data.
-@boards_bp.route("/<board_id>", methods=["GET"])
+@boards_bp.route("/<board_id>", methods=["GET", "POST"])
 @require_valid_id
-def get_one_board(board):
+def one_board(board):
+    if request.method == "GET":
+        return board.board_details(), 200
 
-    return board.board_details(), 200
+    elif request.method == "POST":
+        request_body = request.get_json()
+
+        if request_body["message"]== "":
+            return {"details": "Request body must include message."}, 400
+        
+        new_card = Card()
+        new_card.update_attributes(request_body)
+
+        db.session.add(new_card)
+        db.session.commit()
+
+        return new_card.card_details(), 200
 
 # GET /boards/<board_id>/cards Gets all cards assigned to a specific board.
 # returns a dictionary of cards data for the board.
