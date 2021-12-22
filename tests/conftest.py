@@ -35,7 +35,7 @@ def client(app):
 def one_card(app):
     new_card = Card(
         message=MESSAGE,
-        board_id=1
+        board_id=BOARD_ID
     )
     db.session.add(new_card)
     db.session.commit()
