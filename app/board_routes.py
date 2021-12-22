@@ -1,9 +1,7 @@
 from app import db
 from app.models.board import Board
-from app.models.card import Card
-from flask import Blueprint, request, make_response, jsonify
-import requests
-import os
+from flask import Blueprint, request, jsonify
+
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 

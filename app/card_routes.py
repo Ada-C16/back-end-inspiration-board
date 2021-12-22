@@ -1,8 +1,7 @@
 from app import db
 from app.models.card import Card
-from flask import Blueprint, request, make_response, jsonify
-import requests
-import os
+from flask import Blueprint, request, jsonify
+
 
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
