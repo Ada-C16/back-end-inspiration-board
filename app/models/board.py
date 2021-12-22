@@ -17,7 +17,7 @@ class Board(db.Model):
     
     def board_w_cards_to_dict(self):
         return{
-            "board_id" : self.board.id,
+            "board_id" : self.board_id,
             "title" : self.title,
             "owner" : self.owner,
             "cards" : [card.card_to_dict_w_board() for card in self.cards]

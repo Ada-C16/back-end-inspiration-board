@@ -122,7 +122,7 @@ def get_cards(card):
         return jsonify({"card": card.card_to_dict_w_goal()}), 200
     return jsonify({"card": card.to_dict()})
 
-#not working - haven't linked yet
+#tested & works
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
 @require_board
 def get_cards_in_board(board):
