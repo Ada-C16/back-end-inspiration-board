@@ -19,6 +19,9 @@ boards_bp=Blueprint("board", __name__, url_prefix="/board")
 def validate_board(board_identity):
     @wraps(board_identity)
     def test_for_board (*args, board_ID, **kwargs):
+        if not board_ID.isnumeric(): 
+            return ({"message":f"Board {board_ID} does not exist.",}), 404
+        
         board_check = Board.query.get(board_ID)
         if board_check:
             return board_identity (*args, board_ID, **kwargs)
@@ -27,11 +30,15 @@ def validate_board(board_identity):
     return test_for_board
 
 
-
 #CREATE ONE BOARD
 @boards_bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
+    
+    if (("title" not in request_body.keys()) or 
+        ("owner" not in request_body.keys())):
+        return jsonify("Board not created. Must supply title and owner."), 404
+    
     new_board = Board(
         title = request_body["title"],
         owner = request_body["owner"]
@@ -52,31 +59,34 @@ def create_board():
 @validate_board
 def create_card(board_ID):
     request_body = request.get_json()
+    
+    if ("message" not in request_body.keys()):
+        return jsonify ()
+    
     new_card= Card(
         message = request_body["message"],
         likes_count = 0,
         board_id = board_ID
         # Hardcoded likes, could set as default value.
+        #I researched this and couldn't find a way to do so - Reid
     )
     db.session.add(new_card)
     db.session.commit()
 
-    return jsonify({"message": new_card.message,"board_id": board_ID}), 201
+    return jsonify({"message": new_card.message,"board_id": new_card.board_id}), 201
 
 #GET ALL CARDS FOR SPECIFIC BOARD BY ID
 @boards_bp.route("/<board_ID>/cards", methods=["GET"])
 @validate_board
 def get_all_cards_from_a_board(board_id):
-    #trying to get all cards with same board_id
     all_cards = Card.query.filter_by(board_id=board_id)
     output_dicts_list = []
     for card in all_cards:
-        output_dicts_list.append(
-            {"id":card.card_id,
-            "message":card.message
+        output_dicts_list.append({
+            "id":card.card_id,
+            "message":card.message,
+            "board_id":card.board_id #i just did this for testing we can take out
             })
-#the route returns 201, but it's returning an empty list
-#not sure why & will revisit in the morning - reid
     return jsonify(output_dicts_list), 201
 
 # GET ALL BOARDS
@@ -118,17 +128,24 @@ def delete_one_whole_entire_board(board_ID):
     board = Board.query.get(board_ID)
     db.session.delete(board)
     db.session.commit()
-    response = {"message": f"Board {board.title} was deleted"}
+
+    #not sure if we need this?
+    all_cards = Card.query.filter_by(board_id=board_ID)
+    for card in all_cards:
+        db.session.delete(card)
+        db.session.commit()
+            
+    response = {"message": f"Board {board.title} was deleted."}
     return response, 200
 
 
-@boards_bp.route("/<board_ID>/<card_ID>", methods=["DELETE"])
+@boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["DELETE"])
 @validate_board
 def delete_one_teeny_tiny_card(board_ID, card_ID):
     card = Card.query.get(card_ID)
     if card:
         db.session.delete(card)
         db.session.commit()
-        response = {"message": f"Card {card.card_id} was deleted"}
+        response = {"message": f"Card {card.card_id} was deleted."}
         return response, 200
     return {"message": f"Card id {card_ID} isn't real."},400
