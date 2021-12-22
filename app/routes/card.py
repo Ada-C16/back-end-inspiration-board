@@ -8,8 +8,8 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 @cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card_by_id(card_id):
     card = Card.query.get(card_id)
-    if card == None:
-        return jsonify("Card {card_id} was not found", 404)
+    if not card:
+        return jsonify({"message":f"Card {card_id} was not found"}), 404
 
     else:
         db.session.delete(card)
@@ -20,7 +20,7 @@ def delete_card_by_id(card_id):
 def add_like_to_card(card_id):
     card = Card.query.get(card_id)
     if card == None:
-        return jsonify("Card {card_id} was not found", 404)
+        return jsonify(f"Card {card.card_id} was not found", 404)
 # are we expecting the front end to send a specfic number or will it be sending
 # a +1 to the likes_count and we need to incremement the variable in the database
     else:
