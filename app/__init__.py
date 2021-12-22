@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 from flask_cors import CORS
 
+
 db = SQLAlchemy()
 migrate = Migrate()
 load_dotenv()
@@ -18,6 +19,8 @@ def create_app():
         "SQLALCHEMY_DATABASE_URI")
 
     # Import models here for Alembic setup
+    from app.models.board import Board
+    from app.models.card import Card
     # from app.models.ExampleModel import ExampleModel
 
     db.init_app(app)
