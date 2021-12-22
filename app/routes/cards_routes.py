@@ -13,12 +13,12 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 # Board needs to exist.
 # params: message
 # likes count could default to 0
-@cards_bp.route("", methods=["POST"])
+# @cards_bp.route("", methods=["POST"])
 # def 
 
 # DELETE /cards/<card_id> Deletes a specific card.
 # **CONSIDER** return a dictionary with card data.
-@cards_bp.route("/<card_id>", methods=["DELETE"])
+# @cards_bp.route("/<card_id>", methods=["DELETE"])
 # def
 
 # Enhancement ideas: PUT/PATCH cards (edit message), list all cards

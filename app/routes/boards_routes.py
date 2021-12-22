@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
+from app.helpers.boards_helpers import list_of_boards, require_valid_id
 from app.routes.cards_routes import *
 from app.models.board import Board
+from app.models.card import Card
 from app import db
 
 # example_bp = Blueprint('example_bp', __name__)
@@ -28,17 +30,35 @@ def create_new_board (request_body):
 # returns a dictionary of boards data.
 # return empty array if no boards have been created.
 @boards_bp.route("", methods=["GET"])
-# def 
+def get_boards():
+
+    boards = Board.query.all()
+
+    return list_of_boards(boards), 200
 
 
 # GET /boards/<board_id> Gets data for specific board.
 # returns a dictionary of the board's data.
 @boards_bp.route("/<board_id>", methods=["GET"])
+@require_valid_id
+def get_one_board(board):
+
+    return board.board_details(), 200
 
 # GET /boards/<board_id>/cards Gets all cards assigned to a specific board.
 # returns a dictionary of cards data for the board.
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
-# def
+@require_valid_id
+def cards_of_one_board(board):
+
+    boards_cards = Card.query.filter(Card.board_id==board.board_id)
+
+    all_cards = []
+
+    for card in boards_cards:
+        all_cards.append(card.card_details()) # May need to break this up into two separate steps. Wanted to see if this implementation worked.
+
+    return all_cards, 200
 
 
 # Enhancement ideas - DELETE, PUT/PATCH board info
