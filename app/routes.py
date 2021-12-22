@@ -42,7 +42,7 @@ def retrieve_get_card(card_id):
     elif request.method == "GET":
         pass
     elif request.method == "PUT":
-        
+        pass
 
     elif request.method == "DELETE":
         db.session.delete(card)
