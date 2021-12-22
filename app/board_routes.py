@@ -28,18 +28,19 @@ def create_board():
 
 
 #CREATE ONE CARD ON A SPECIFIC BOARD
-@boards_bp.route("/<board_id>", methods=["POST"])
-def create_card(board_id):
+@boards_bp.route("/<board_ID>", methods=["POST"])
+def create_card(board_ID):
     request_body = request.get_json()
     new_card= Card(
         message = request_body["message"],
-        likes_count = 0
+        likes_count = 0,
+        board_id = board_ID
         # Hardcoded likes, could set as default value.
     )
     db.session.add(new_card)
     db.session.commit()
 
-    return jsonify({"message": new_card.message}), 201
+    return jsonify({"message": new_card.message,"board_id": board_ID}), 201
 
 #GET ALL CARDS FOR SPECIFIC BOARD BY ID
 @boards_bp.route("/<board_id>", methods=["GET"])
