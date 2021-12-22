@@ -7,6 +7,7 @@ from app.models.board import Board
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
+# each HTTP method should have it's own function to follow the single responsbility principle
 @cards_bp.route("", methods=["GET","POST"])
 def retrieve_cards():
     if request.method == 'GET':
