@@ -11,7 +11,6 @@ BOARD_OWNER = "Some Name"
 @pytest.fixture
 def app():
     app = create_app({"TESTING": True})
-
     # @request_finished.connect_via(app)
     # def expire_session(sender, response, **extra):
     #     db.session.remove()

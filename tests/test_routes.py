@@ -24,3 +24,48 @@ def test_create_new_board(client):
 
     assert new_board
     assert new_board.title == BOARD_TITLE
+
+def test_create_board_must_contain_title_and_owner(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "",
+        "owner": ""
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {
+        "details": "Request body must include title and owner."
+    }
+    assert Board.query.all() == []
+
+def test_create_board_must_contain_title(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": "",
+        "owner": BOARD_OWNER
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {
+        "details": "Request body must include title."
+    }
+    assert Board.query.all() == []
+
+def test_create_board_must_contain_owner(client):
+    # Act
+    response = client.post("/boards", json={
+        "title": BOARD_TITLE,
+        "owner": ""
+    })
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 400
+    assert response_body == {
+        "details": "Request body must include owner."
+    }
+    assert Board.query.all() == []
