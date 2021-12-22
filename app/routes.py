@@ -57,14 +57,14 @@ def handle_board_cards(id):
 
         db.session.add(new_card)
         db.session.commit()
-# **************** created for what???
-        return make_response(f"A new card was successfully created for ", 201)
+
+        return make_response(f"A new card was successfully created for board: {id} .", 201)
     
     if request.method == "GET":
         
         cards = board.cards 
         cards_response = []
-      
+
         for card in cards:
             cards_response.append({
                 "id" : card.id,
@@ -75,6 +75,16 @@ def handle_board_cards(id):
         
         return jsonify(cards_response), 200
 
+@boards_bp.route("/<id>/cards/<card_id>", methods=["GET", "POST", "DELETE"])
+def handle_cards(id, card_id):
+    # board = Board.query.get(id)
+    # cards = board.cards
+    card = Card.query.get(card_id)
+    
+    if request.method == "DELETE":
+        db.session.delete(card)
+        db.session.commit()
+        return make_response(f"Card #{card_id} successfully deleted")
 # NEXT STETPS: 1.) create delete method for card and like put/patch method for likes 2.) deploy on heroku and test everything out (back end should deploy before front end)
 
 # How do we connect to the board the card was created under 
