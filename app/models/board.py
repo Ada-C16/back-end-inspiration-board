@@ -7,8 +7,6 @@ class Board (db.Model):
     owner = db.Column(db.String)
     cards = db.relationship("Card", back_populates="board")
 
-# Need to establish relationship between board and card
-
     def update_attributes(self, request_body):
         self.title = request_body["title"]
         self.owner=request_body["owner"]

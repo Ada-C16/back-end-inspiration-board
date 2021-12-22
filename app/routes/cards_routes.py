@@ -1,5 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
+from app.helpers.cards_helpers import require_valid_request_body
 from app.routes.boards_routes import *
+from app.models.board import Board
+from app.models.card import Card
 from app import db
 
 # example_bp = Blueprint('example_bp', __name__)
@@ -9,12 +12,21 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 # POST /cards Creates a new card.
 # returns a dictionary of card information.
-# **QUESTION** does it require the board ID to be in the request body?
+# **QUESTION** does it require the board ID to be in the request body? **ANSWER** Yes, and the message.
 # Board needs to exist.
 # params: message
 # likes count could default to 0
-# @cards_bp.route("", methods=["POST"])
-# def 
+@cards_bp.route("", methods=["POST"])
+@require_valid_request_body
+def create_new_card(request_body):
+    
+    new_card = Card()
+    new_card.update_attributes(request_body)
+
+    db.session.add(new_card)
+    db.session.commit()
+
+    return new_card.card_details(), 200
 
 # DELETE /cards/<card_id> Deletes a specific card.
 # **CONSIDER** return a dictionary with card data.

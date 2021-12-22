@@ -1,5 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
-from app.helpers.boards_helpers import list_of_boards, require_valid_id
+from flask import Blueprint
 from app.routes.cards_routes import *
 from app.models.board import Board
 from app.models.card import Card
@@ -13,7 +12,7 @@ boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 # returns a dictionary with board data. 
 @boards_bp.route("", methods=["POST"])
 @require_valid_request_body
-def create_new_board (request_body):
+def create_new_board(request_body):
 
     new_board = Board()
     new_board.update_attributes(request_body)
