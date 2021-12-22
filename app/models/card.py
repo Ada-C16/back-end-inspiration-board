@@ -7,3 +7,12 @@ class Card(db.Model):
     message = db.Column(db.String)
     likes_count = db.Column(db.Integer)
     board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'), primary_key=True, nullable=False)
+
+def create_card_dict(self):
+        return_dict = {
+                "id":self.card_id,
+                "message":self.message,
+                "likes_count":self.likes_count,
+                "board_id": self.board_id
+                }
+        return return_dict
