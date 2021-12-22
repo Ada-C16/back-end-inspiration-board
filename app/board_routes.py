@@ -64,7 +64,7 @@ def create_card(board_ID):
     return jsonify({"message": new_card.message,"board_id": board_ID}), 201
 
 #GET ALL CARDS FOR SPECIFIC BOARD BY ID
-@boards_bp.route("/<board_ID>", methods=["GET"])
+@boards_bp.route("/<board_ID>/cards", methods=["GET"])
 @validate_board
 def get_all_cards_from_a_board(board_id):
     #trying to get all cards with same board_id
