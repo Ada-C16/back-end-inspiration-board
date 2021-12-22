@@ -29,6 +29,19 @@ def validate_board(board_identity):
             return ({"message":f"Board {board_ID} does not exist",}), 404
     return test_for_board
 
+def validate_card(card_identity):
+    @wraps(card_identity)
+    def test_for_card (*args, card_ID, **kwargs):
+        if not card_ID.isnumeric(): 
+            return ({"message":f"Card {card_ID} does not exist.",}), 404
+        
+        card_check = Card.query.get(card_ID)
+        if card_check:
+            return card_identity (*args, card_ID, **kwargs)
+        else:
+            return ({"message":f"Card {card_ID} does not exist",}), 404
+    return test_for_card
+
 
 #CREATE ONE BOARD
 @boards_bp.route("", methods=["POST"])
@@ -57,6 +70,7 @@ def create_board():
 #CREATE ONE CARD ON A SPECIFIC BOARD
 @boards_bp.route("/<board_ID>", methods=["POST"])
 @validate_board
+@validate_card
 def create_card(board_ID):
     request_body = request.get_json()
     
@@ -83,11 +97,26 @@ def get_all_cards_from_a_board(board_id):
     output_dicts_list = []
     for card in all_cards:
         output_dicts_list.append({
-            "id":card.card_id,
+            "card_id":card.card_id,
             "message":card.message,
             "board_id":card.board_id #i just did this for testing we can take out
             })
     return jsonify(output_dicts_list), 201
+
+
+#GET ONE CARD FOR SPECIFIC BOARD BY ID
+@boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["GET"])
+@validate_board
+@validate_card
+def get_one_card_from_a_board(board_ID, card_ID):
+    #should we actually fetch this by board_ID and card_ID? Does it matter?
+    card = Card.query.get(card_ID)
+    
+    return jsonify({
+            "card_id":card.card_id,
+            "message":card.message,
+            "board_id":card.board_id #i just did this for testing we can take out
+            }), 201
 
 # GET ALL BOARDS
 @boards_bp.route("", methods=["GET"])
@@ -137,7 +166,6 @@ def delete_one_whole_entire_board(board_ID):
             
     response = {"message": f"Board {board.title} was deleted."}
     return response, 200
-
 
 @boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["DELETE"])
 @validate_board
