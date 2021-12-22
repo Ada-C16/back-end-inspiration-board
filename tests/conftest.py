@@ -34,7 +34,7 @@ def client(app):
 @pytest.fixture
 def one_card(app):
     new_card = Card(
-        message=CARD_MESSAGE,
+        message=MESSAGE,
         board_id=1
     )
     db.session.add(new_card)
@@ -43,8 +43,8 @@ def one_card(app):
 @pytest.fixture
 def one_board(app):
     new_board = Board(
-        owner=CARD_MESSAGE,
-        title=CARD_MESSAGE
+        owner=OWNER,
+        title=TITLE
     )
     db.session.add(new_board)
     db.session.commit()

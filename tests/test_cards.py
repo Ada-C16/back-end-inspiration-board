@@ -18,7 +18,7 @@ def test_delete_card(client, one_board, one_card):
     response_body = response.get_json()
 
     # Assert
-    assert response_body == jsonify("card deleted", 200)
+    assert response_body == {"message": "card deleted"}
     assert response.status_code == 200
     assert Card.query.all() == []
 
