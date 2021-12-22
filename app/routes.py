@@ -2,8 +2,7 @@ from flask import Blueprint, request, jsonify
 from app import db
 from app.models.card import Card
 from app.models.board import Board
-from app.models.board import Board
-from app.models.card import Card
+
 
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
@@ -35,11 +34,11 @@ def retrieve_cards():
         response_body ={"card": new_card.card_dict()}
         return jsonify(response_body),201
 
-        @cards_bp.route("/<card_id>", methods= ["GET", "PUT","DELETE"])
-        def retrieve_get_card(card_id):
-            if card is None: 
-                return jsonify(None), 404
-            elif request.method == "GET":
+@cards_bp.route("/<card_id>", methods= ["GET", "PUT","DELETE"])
+def retrieve_get_card(card_id):
+    if "card" is None: 
+        return jsonify(None), 404
+    elif request.method == "GET":
                 
 
 # CREATE
