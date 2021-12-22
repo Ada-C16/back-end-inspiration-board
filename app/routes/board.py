@@ -12,8 +12,11 @@ def get_boards():
     if boards == None:
         return jsonify("No boards found", 404)
     else:
-        pass
-    # need to figure out what we want the board to exactly return
+        response_body = []
+        for board in boards:
+            response_body.append(board.response_dict())
+
+    return jsonify(response_body), 200
 
 @boards_bp.route("/<board_id>", methods=["GET"])
 def get_videos_by_id(board_id):
@@ -24,6 +27,6 @@ def get_videos_by_id(board_id):
         return jsonify({"message": f"{board_id} was not found"}), 404
     # if board.deleted_at:
     #     return jsonify(None), 404
-    response_body = board.create_dict()
-    # need to figure out what we want the board to exactly return
+    response_body = board.response_dict()
+
     return jsonify(response_body), 200

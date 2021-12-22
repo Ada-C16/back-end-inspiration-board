@@ -6,3 +6,11 @@ class Board(db.Model):
     title = db.Column(db.String)
     owner = db.Column(db.String)
     cards = db.relationship("Card", backref="board")
+
+    def response_dict(self):
+        board = Board.query.get(self.board_id)
+
+        return {
+            "title": self.title,
+            "owner": self.owner
+        }
