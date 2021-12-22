@@ -5,6 +5,8 @@ from app.models.card import Card
 
 # example_bp = Blueprint('example_bp', __name__)
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
+cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
+
 @boards_bp.route("", methods = ["POST", "GET"])
 def handle_boards():
     if request.method == "POST":
@@ -96,4 +98,17 @@ def handle_boards_cards(board_id):
                 })
         return jsonify(board_cards)
 
-    # Need to git commit - added creates a new card + read all cards
+@cards_bp.route("/<card_id>", methods= ["DELETE"])
+def handle_cards(card_id):
+    try:
+        card = Card.query.get(card_id)
+    except:
+        return {"details": "Invalid data"}, 400 # For when you enter /asdjsaiod instead of a num
+
+    if card is None:
+        return {"message": f" Board {card_id} not found"}, 404
+    
+    db.session.delete(card)
+    db.session.commit()
+
+    return {"details": f"Card {card_id} was successfully deleted"}
