@@ -36,9 +36,21 @@ def retrieve_cards():
 
 @cards_bp.route("/<card_id>", methods= ["GET", "PUT","DELETE"])
 def retrieve_get_card(card_id):
+    card = Card.query.get(card_id)
     if "card" is None: 
         return jsonify(None), 404
     elif request.method == "GET":
+        pass
+    elif request.method == "PUT":
+        
+
+    elif request.method == "DELETE":
+        db.session.delete(card)
+        db.session.commit()
+
+        return {
+            "message": (f"Card {card_id} has been deleted")
+        }
                 
 
 # CREATE
