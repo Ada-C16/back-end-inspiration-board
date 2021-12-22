@@ -120,3 +120,15 @@ def delete_one_whole_entire_board(board_ID):
     db.session.commit()
     response = {"message": f"Board {board.title} was deleted"}
     return response, 200
+
+
+@boards_bp.route("/<board_ID>/<card_ID>", methods=["DELETE"])
+@validate_board
+def delete_one_teeny_tiny_card(board_ID, card_ID):
+    card = Card.query.get(card_ID)
+    if card:
+        db.session.delete(card)
+        db.session.commit()
+        response = {"message": f"Card {card.card_id} was deleted"}
+        return response, 200
+    return {"message": f"Card id {card_ID} isn't real."},400
