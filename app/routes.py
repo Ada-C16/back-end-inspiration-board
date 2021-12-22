@@ -35,6 +35,11 @@ def require_card(endpoint):
 def post_card_in_board(board):
     request_body = request.get_json()
 
+    if request_body["message"] == "":
+        return ({
+        "details": "Input is missing"
+    }), 400
+
     if "message" not in request_body:
         return ({
         "details": "Needs message"
@@ -56,6 +61,11 @@ def post_card():
     request_body = request.get_json()
 
     new_card = Card.from_dict(request_body)
+
+    if request_body["message"] == "":
+        return ({
+        "details": "Input is missing"
+    }), 400
 
     if "message" not in request_body:
         return ({
