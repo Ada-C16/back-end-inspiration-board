@@ -38,7 +38,7 @@ def post_board():
     return jsonify(response_body), 201
 
 @boards_bp.route("/<board_id>", methods=["GET"])
-def get_videos_by_id(board_id):
+def get_board_by_id(board_id):
     if not board_id.isnumeric():
         return jsonify(None), 400
     board = Board.query.get(board_id)
@@ -57,16 +57,14 @@ def get_cards_by_board(board_id):
     if not board:
         return jsonify({"message": f"{board_id} was not found"}), 404
 
-    card_response = [card.id for card in board.cards]
+    card_response = [card.card_id for card in board.cards]
 
-    response_body = []
-        # [Card.query.get(card).create_dict() for card in card_response] <= update when I have the name of the card method
+    response_body = [Card.query.get(card).create_card_dict() for card in card_response]
 
     return jsonify(response_body), 200
 
-# POST /boards/<board_id>/cards
-boards_bp.route("/<board_id>/cards", methods=["POST"])
-def get_cards_by_board(board_id):
+@boards_bp.route("/<board_id>/cards", methods=["POST"])
+def create_cards_in_board(board_id):
     if not board_id.isnumeric():
         return jsonify(None), 400
     board = Board.query.get(board_id)
@@ -80,11 +78,11 @@ def get_cards_by_board(board_id):
         return jsonify(response_body), 400
     
     new_card = Card(
-        board_id=request_body["board_id"],
+        board_id=board_id,
         message=request_body["message"],
         likes_count = 0,
     )
     db.session.add(new_card)
     db.session.commit()
-    # response_body = new_card.rental_dict() <= update when I have the name of the card method
+    response_body = new_card.create_card_dict()
     return jsonify(response_body), 200
