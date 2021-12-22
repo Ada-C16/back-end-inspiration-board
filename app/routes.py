@@ -75,7 +75,7 @@ def handle_board_cards(id):
         
         return jsonify(cards_response), 200
 
-@cards_bp.route("/<id>", methods=["DELETE"])
+@cards_bp.route("/<id>", methods=["DELETE", "PATCH"])
 def handle_cards(id):
     card = Card.query.get(id)
     
@@ -83,9 +83,16 @@ def handle_cards(id):
         db.session.delete(card)
         db.session.commit()
         return make_response(f"Card #{id} successfully deleted")
-# NEXT STETPS: 1.) create delete method for card and like put/patch method for likes 2.) deploy on heroku and test everything out (back end should deploy before front end)
+    if request.method == "PATCH":
+        card.likes_count += 1
+    
+        db.session.commit()
+
+        return jsonify({"likes_count": card.likes_count }), 200
+
+# NEXT STEPS: 1.) create delete method for card and like put/patch method for likes 2.) deploy on heroku and test everything out (back end should deploy before front end)
 
 # How do we connect to the board the card was created under 
 # test if automatically generates through postman 
 # if not try:
-# new_card.board_id = id 
+# new_card.board_id = id
