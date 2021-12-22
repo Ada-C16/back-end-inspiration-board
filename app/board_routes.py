@@ -78,3 +78,35 @@ def get_all_cards_from_a_board(board_id):
 #the route returns 201, but it's returning an empty list
 #not sure why & will revisit in the morning - reid
     return jsonify(output_dicts_list), 201
+
+# GET ALL BOARDS
+@boards_bp.route("", methods=["GET"])
+def get_all_boards():
+    boards = Board.query.all()
+
+    response_body = []
+
+    for board in boards:
+        response_body.append(
+            {"id" : board.board_id,
+            "title" : board.title,
+            "owner" : board.owner}
+        )
+
+    return jsonify(response_body), 200
+
+# GET ONE BOARD BY SUPPLYING board_id
+@boards_bp.route("/<board_id>", methods=["GET"])
+def get_one_board(board_id):
+    board = Board.query.get(board_id)
+
+    if board is None:
+        return jsonify(None),404
+    
+    response_body = {
+        "id" : board.board_id,
+        "title" : board.title,
+        "owner" : board.owner
+    }
+
+    return jsonify(response_body), 200
