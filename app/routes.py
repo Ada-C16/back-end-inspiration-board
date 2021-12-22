@@ -73,6 +73,11 @@ def post_board():
     request_body = request.get_json()
     new_board = Board.from_dict(request_body)
 
+    if request_body["title"] == "" or request_body["owner"] == "":
+        return ({
+        "details": "Input is missing"
+    }), 400
+
     if "title" not in request_body or "owner" not in request_body:
         return ({
         "details": "Missing information"
