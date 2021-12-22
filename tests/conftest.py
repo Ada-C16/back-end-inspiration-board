@@ -34,3 +34,25 @@ def one_board(app):
         )
     db.session.add(new_board)
     db.session.commit()
+
+@pytest.fixture
+def three_boards(app):
+    board_one = Board(
+        title=BOARD_TITLE,
+        owner=BOARD_OWNER
+    )
+
+    board_two = Board(
+        title = "Second Board",
+        owner = "Second Name"
+    )
+
+    board_three = Board(
+        title = "Third Board",
+        owner = "Third Name"
+    )
+    db.session.add(board_one)
+    db.session.add(board_two)
+    db.session.add(board_three)
+    db.session.commit()
+

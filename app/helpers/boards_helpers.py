@@ -5,16 +5,16 @@ from flask import jsonify, request
 # Decorator to check if id is an integer and if the board exists.
 def require_valid_id(endpoint):
     @wraps(endpoint)
-    def fn(*args, id, **kwargs):
+    def fn(*args, board_id, **kwargs):
         try:
-            id = int(id)
+            board_id = int(board_id)
         except ValueError:
             return {"message": "Board id needs to be an integer"}, 400
 
-        board = Board.query.get(id)
+        board = Board.query.get(board_id)
 
         if not board: 
-            return {"message": f"Board {id} was not found"}, 404
+            return {"message": f"Board {board_id} was not found"}, 404
 
         return endpoint(*args, board=board, **kwargs)
     return fn
