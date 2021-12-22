@@ -80,7 +80,6 @@ def create_cards_in_board(board_id):
     new_card = Card(
         board_id=board_id,
         message=request_body["message"],
-        likes_count = 0,
     )
     db.session.add(new_card)
     db.session.commit()
