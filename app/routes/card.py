@@ -28,7 +28,7 @@ def add_like_to_card(card_id):
         try:
             form_data["likes_count"]
         except:
-            return jsonify({"message": "Oops try again"}), 400
+            return jsonify({"message": "Request body must include likes_count"}), 400
             
         card.likes_count = form_data["likes_count"]
         db.session.commit()
