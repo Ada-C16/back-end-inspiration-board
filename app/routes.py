@@ -100,3 +100,37 @@ def delete_card(card_id):
     db.session.commit()
 
     return jsonify({f"Card {card} successfully deleted."})
+
+
+
+# added back
+@cards_bp.route("/<card_id>", methods= ["GET", "PUT","DELETE"])
+def retrieve_get_card(card_id):
+    card = Card.query.get(card_id)
+    if "card" is None: 
+        return jsonify(None), 404
+    elif request.method == "GET":
+        pass
+    elif request.method == "PUT":
+        pass
+
+    elif request.method == "DELETE":
+        db.session.delete(card)
+        db.session.commit()
+
+        return {
+            "message": (f"Card {card_id} has been deleted")
+        }
+
+
+#Delete created and needs to be modified.    
+@boards_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = Board.query.get(board_id) 
+    # cards = #Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
+
+    # for card in cards:
+    for card in board.cards:
+        db.session.delete(card)
+    db.session.delete(board_id)
+    db.session.commit()
