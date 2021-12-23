@@ -20,7 +20,7 @@ def delete_card_by_id(card_id):
 def add_like_to_card(card_id):
     card = Card.query.get(card_id)
     if not card:
-        return jsonify({"message": "Card {card.card_id} was not found"}), 404
+        return jsonify({"message": f"Card {card_id} was not found"}), 404
 # are we expecting the front end to send a specfic number or will it be sending
 # a +1 to the likes_count and we need to incremement the variable in the database
     else:
@@ -28,7 +28,7 @@ def add_like_to_card(card_id):
         try:
             form_data["likes_count"]
         except:
-            return jsonify({"message": "Oops try again"}), 400
+            return jsonify({"message": "Request body must include likes_count"}), 400
             
         card.likes_count = form_data["likes_count"]
         db.session.commit()

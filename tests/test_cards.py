@@ -36,17 +36,20 @@ def test_delete_card_not_found(client, one_board):
 
 def test_add_like_to_card(client, one_board, one_card):
     # Act
-    response = client.patch("/1/like", json={"likes_count": 2})
+    response = client.patch("/cards/1/like", json={"likes_count": 2})
+    print(response)
     response_body=response.get_json()
     
     # Assert
-    assert response_body == one_card.create_card_dict()
-    assert response.status_code == 404
-    assert Card.query.all() == []
+    assert response_body["id"] == 1
+    assert response_body["message"] == "Test message"
+    assert response_body["likes_count"] == 2
+    # assert response_body == one_card.create_card_dict()
+    assert response.status_code == 200
 
 def test_add_like_to_card_not_found(client, one_board):
     # Act
-    response = client.patch("/1/like", json={"likes_count": 2})
+    response = client.patch("/cards/1/like", json={"likes_count": 2})
     response_body=response.get_json()
     
     # Assert
@@ -54,4 +57,11 @@ def test_add_like_to_card_not_found(client, one_board):
     assert response.status_code == 404
     assert Card.query.all() == []
 
-
+def test_add_like_to_card_missing_data(client, one_board, one_card):
+    # Act
+    response = client.patch("/cards/1/like")
+    response_body=response.get_json()
+    
+    # Assert
+    assert response_body == {"message": "Request body must include likes_count"}
+    assert response.status_code == 400
