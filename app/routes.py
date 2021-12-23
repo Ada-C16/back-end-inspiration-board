@@ -49,7 +49,8 @@ def handle_board(id):
 
 # Create route for when user selects a specific board to work on 
 # for likes count, will need to have an API for put to update likes
-
+# add error messages for when board does not exist
+# double check endpoint/routes to make sure it is what front end needs 
 @boards_bp.route("/<id>/cards", methods=["GET", "POST", "DELETE"])
 def handle_board_cards(id):
     board = Board.query.get(id)
