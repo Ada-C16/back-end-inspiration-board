@@ -8,66 +8,6 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 # each HTTP method should have it's own function to follow the single responsbility principle
-@cards_bp.route("", methods=["GET","POST"])
-@cards_bp.route("/<board>/card")
-def retrieve_cards():
-    if request.method == 'GET':
-        cards = Card.query.all()
-        cards_response = []
-        for card in cards:
-            cards_response.append(card.card_dict())
-
-        return jsonify(cards_response), 200
-
-    # elif request.method == "POST":
-    #     #create card
-    #     request_body = request.get_json()
-    #     if "message" not in request_body or "likes_count" not in request_body:
-    #         return jsonify ({
-    #             "error meesage": "Invalid data"
-    #         }), 400
-    #     new_card = Card(
-    #         message = request_body["message"],
-    #         likes_count = request_body["likes_count"]
-    #     )
-
-        db.session.add(new_card)
-        db.session.commit()
-
-        response_body ={"card": new_card.card_dict()}
-        return jsonify(response_body),201
-
-@cards_bp.route("/<card_id>", methods= ["GET", "PUT","DELETE"])
-def retrieve_get_card(card_id):
-    card = Card.query.get(card_id)
-    if "card" is None: 
-        return jsonify(None), 404
-    elif request.method == "GET":
-        pass
-    elif request.method == "PUT":
-        pass
-
-    elif request.method == "DELETE":
-        db.session.delete(card)
-        db.session.commit()
-
-        return {
-            "message": (f"Card {card_id} has been deleted")
-        }
-
-
-#Delete created and needs to be modified.    
-@boards_bp.route("/<board_id>", methods=["DELETE"])
-def delete_board(board_id):
-    board = Board.query.get(board_id) 
-    # cards = #Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
-
-    # for card in cards:
-    for card in board.cards:
-        db.session.delete(card)
-    db.session.delete(board_id)
-    db.session.commit()
-
 
 # CREATE
 # Create a new board
@@ -93,13 +33,11 @@ def create_card(board_id):
     board = Board.query.get(board_id)
     request_body = request.getjson()
 
-    # 'likes_count by default will be 0 for every new card. Curious how we can hard card this in
-    # so it's not a required request parameter
-    if "title" not in request_body or "message" not in request_body or "likes_count" not in request_body:
+    if "title" not in request_body or "message" not in request_body:
         return jsonify("Not Found"), 404
 
     # 'title' represents the Board's "Title"
-    new_card = Card(title=request_body["title"], message=request_body["message"], likes_count=request_body["likes_count"])
+    new_card = Card(title=request_body["title"], message=request_body["message"], likes_count=0)
 
     db.session.add(new_card)
     db.session.commit()
@@ -108,17 +46,57 @@ def create_card(board_id):
 
 
 
-
-# likes count has a default of zero 
 # READ
 # All cards within a board
+# @cards_bp.route("", methods=["GET"])
+@boards_bp.route("/<board_id>/cards", methods=['GET'])
+def retrieve_cards(board_id):
+    board = Board.query.get(board_id)
+    cards_response = []
+    for card in board.cards:
+        cards_response.append(card.card_dict())
+
+    return jsonify(cards_response), 200
+
+
 # All boards (board names) listed on Inspiration Board
 
 # UPDATE
-# Can update a board by adding new cards
 # Can update cards by adding 'likes'
+@cards_bp.route("/<card_id>", methods=["PATCH"])
+def update_card(card_id):
+    card = Card.query.get(card_id)
+    if card is None:
+        return jsonify("Not Found"), 404
+
+    card.likes_count += 1
+
+    db.session.commit()
+
+    return jsonify(f"Card {card.id} successfully updated"), 200
+
 
 # DELETE
-# Can delete cards in a board
+
 # Can delete a single board
-# Can delete all cards and boards (? do we want to include this functionality?)
+@boards_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = Board.query.get(board_id) 
+    # cards = Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
+
+    db.session.delete(board)
+    db.session.commit()
+
+    return jsonify({f"Board {board_id} successfully deleted."})
+
+
+# Can delete cards in a board
+@boards_bp.route("/<card_id>", methods=["DELETE"])
+def delete_card(card_id):
+    card = Board.query.get(card_id) 
+    # cards = Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
+
+    db.session.delete(card)
+    db.session.commit()
+
+    return jsonify({f"Card {card} successfully deleted."})
