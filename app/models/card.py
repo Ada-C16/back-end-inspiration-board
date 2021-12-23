@@ -9,6 +9,7 @@ class Card (db.Model):
 
     def update_likes(self):
         self.likes_count += 1
+        # return self.likes_count
 
     def update_attributes(self, board_id, request_body):
         self.board_id = board_id

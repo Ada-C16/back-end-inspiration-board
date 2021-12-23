@@ -13,7 +13,7 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 # DELETE /cards/<card_id> Deletes a specific card.
 # **CONSIDER** return a dictionary with card data.
 @cards_bp.route("/<card_id>", methods=["DELETE"])
-@require_valid_id
+@require_valid_id # BE considered whether or not this decorator is necessary.
 def delete_card(card):
 
     db.session.delete(card)
@@ -24,3 +24,13 @@ def delete_card(card):
 # Enhancement ideas: PUT/PATCH cards (edit message), list all cards
 # **QUESTION** pretty sure we don't but do we need a get request per specific card?
 # **QUESTION** What do we need to validate for each endpoint?
+
+# PATCH /cards/<card_id> Updates a specific card's likes count.
+@cards_bp.route("/<card_id>", methods=["PATCH"])
+@require_valid_id # BE considered whether or not this decorator is necessary.
+def update_likes_count(card):
+    card.update_likes()
+
+    db.session.commit()
+
+    return jsonify("Likes count updated"), 200
