@@ -26,11 +26,11 @@ def test_delete_card(client, one_board, one_card):
 
 def test_delete_card_not_found(client, one_board):
     # Act
-    response=client.delete("/cards/3000")
+    response=client.delete("/cards/1")
     response_body=response.get_json()
     print(response_body)
     # Assert
-    assert response_body == {"message": f"Card 3000 was not found"}
+    assert response_body == {"message": "Card 1 was not found"}
     assert response.status_code == 404
     assert Card.query.all() == []
 
@@ -41,8 +41,8 @@ def test_add_like_to_card(client, one_board, one_card):
     response_body=response.get_json()
     
     # Assert
-    assert response_body["id"] == 1
-    assert response_body["message"] == "Test message"
+    assert response_body["id"] == CARD_ID
+    assert response_body["message"] == MESSAGE
     assert response_body["likes_count"] == 2
     # assert response_body == one_card.create_card_dict()
     assert response.status_code == 200
