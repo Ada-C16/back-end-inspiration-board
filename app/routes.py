@@ -6,7 +6,7 @@ from app.models.card import Card
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
-@boards_bp.route("", methods=["GET", "POST", "DELETE"])
+@boards_bp.route("", methods=["GET", "POST"])
 def handle_boards():
     if request.method == "POST":
         request_body = request.get_json()
