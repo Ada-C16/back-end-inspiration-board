@@ -20,7 +20,7 @@ def test_create_board(client):
     response_body = response.get_json()
 
     assert response.status_code == 201
-    assert "successful post" in response_body
+    assert "Food Board" in response_body
     new_board = Board.query.first()
     assert new_board
     assert new_board.board_id == 1

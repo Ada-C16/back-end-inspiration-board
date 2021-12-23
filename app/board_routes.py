@@ -20,7 +20,7 @@ def post_board():
         return jsonify("unsuccessful post"), 400
     db.session.add(new_board)
     db.session.commit()
-    return jsonify("successful post"), 201
+    return jsonify(request_body["title"]), 201
 
 @boards_bp.route("/<id>", methods=["GET"])
 def get_board_cards(id):
