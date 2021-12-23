@@ -149,7 +149,7 @@ def get_cards_in_board(board):
 def delete_card (card):
     db.session.delete(card)
     db.session.commit()
-    return jsonify({"details": (f"{card.message} was deleted")}), 200
+    return jsonify({"details": (f"card #{card.card_id} was deleted")}), 200
 
 #tested & works
 @boards_bp.route("/<board_id>", methods=["DELETE"])
@@ -157,4 +157,4 @@ def delete_card (card):
 def delete_board(board):
     db.session.delete(board)
     db.session.commit()
-    return jsonify({"details": (f"{board.title} was deleted")}), 200
+    return jsonify({"details": (f"board #{board.board_id} was deleted")}), 200
