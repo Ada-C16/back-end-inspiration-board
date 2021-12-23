@@ -1,12 +1,13 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.card import Card
+from app.models.board import Board
 
 # example_bp = Blueprint('example_bp', __name__)
-# will need CRUD routes for Card and Board
+
 
 #beginning CRUD routes code for Card here
-# assign videos_bp to the new Blueprint instance
+# assign cards_bp to the new Blueprint instance
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 @cards_bp.route("", methods=["POST"])
 def post_one_card():
@@ -58,7 +59,56 @@ def CRUD_one_card(card_id):
 
     if request.method == "DELETE":
     # query db for specific card object by the card id
-        if Card.query.filter_by(id=card_id):
-            db.session.delete(card)
-            db.session.commit()
+        #if Card.query.filter_by(id=card_id):
+        db.session.delete(card)
+        db.session.commit()
         return make_response({'message': f"Card {card.id} was deleted"}, 200)
+
+# beginning CRUD routes code for Board here
+# assign boards_bp to the new Blueprint instance
+boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
+@boards_bp.route("", methods=["POST"])
+def post_one_board():
+    # request_body will be the user's input, converted to json. it will be a new record 
+    # for the db, with all fields (a dict)
+    request_body = request.get_json()
+    if 'title' not in request_body:
+        return make_response({"details": "Request body must include title."}, 400)
+    elif 'author' not in request_body:
+        return make_response({"details": "Request body must include author."}, 400)
+    else:
+        # taking info fr request_body and converting it to new Board object    
+        new_board = Board(title=request_body["title"],
+                        author= request_body["author"])
+        # committing changes to db
+        db.session.add(new_board)
+        db.session.commit()
+        return(new_board.convert_board_to_dict()), 201 
+
+# this end point is returning a list of all Board objects (from the db) that have been jsonified
+@boards_bp.route("", methods=["GET"])
+def get_all_boards():
+    # querying db for all boards and ordering them by title, then storing that list of 
+    # objects in local boards variable    
+    boards = Board.query.order_by(Board.title).all()
+    boards_response = []
+    # looping through each boaard, converting to requested format (dict) and adding to
+    # board_response which will be list of dicts
+    for board in boards:    
+        boards_response.append(board.convert_board_to_dict())
+    return jsonify(boards_response), 200
+
+@boards_bp.route("/<board_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
+def CRUD_one_board(board_id):
+    board = Board.query.get(board_id) #either get Board back fr db or None, board here is an object
+    if board is None:
+        return make_response({"message": f"Board {board_id} was not found"}, 404)
+    if request.method == "GET":  
+        return board.convert_board_to_dict()  
+    
+    if request.method == "DELETE":
+    # query db for specific board object by the board id
+        #if Board.query.filter_by(id=board_id):
+        db.session.delete(board)
+        db.session.commit()
+        return make_response({'message': f"Board {board.id} was deleted"}, 200)
