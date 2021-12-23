@@ -13,17 +13,17 @@ boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 # Create a new board
 @boards_bp.route("", methods=['POST'])
 def create_board():
-    request_body = request.getjson()
-    if "name" not in request_body or "title" not in request_body:
+    request_body = request.get_json()
+    if "owner" not in request_body or "title" not in request_body:
         return jsonify("Not Found"), 404
 
     # 'name' represents "Owners name" in the form on the frontend
-    new_board = Board(name=request_body["name"], title=request_body["title"])
+    new_board = Board(owner=request_body["owner"], title=request_body["title"])
 
     db.session.add(new_board)
     db.session.commit()
 
-    return jsonify(f"Board: {new_board.name} successfully created."), 201
+    return jsonify(f"Board: {new_board.title} successfully created."), 201
 
 
 # Create a new card
@@ -31,7 +31,7 @@ def create_board():
 #front-end needs a click event to provide API call to backend with board id
 def create_card(board_id):
     # board = Board.query.get(board_id)
-    request_body = request.getjson()
+    request_body = request.get_json()
 
     if "title" not in request_body or "message" not in request_body:
         return jsonify("Not Found"), 404
@@ -99,16 +99,19 @@ def delete_board(board_id):
         #db.session.commit()
     db.session.delete(board)
     db.session.commit()
+
+    return jsonify(f"Board {board.id} successfully deleted.")
 # Can delete cards in a board
-@boards_bp.route("/<card_id>", methods=["DELETE"])
+
+@cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
-    card = Board.query.get(card_id) 
+    card = Card.query.get(card_id) 
     # cards = Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
 
     db.session.delete(card)
     db.session.commit()
 
-    return jsonify({f"Card {card} successfully deleted."})
+    return jsonify(f"Card {card.card_id} successfully deleted.")
 
 
 
