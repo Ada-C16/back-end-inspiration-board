@@ -8,7 +8,6 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 # each HTTP method should have it's own function to follow the single responsbility principle
-<<<<<<< HEAD
 @cards_bp.route("", methods=["GET"])
 @cards_bp.route("/<board>/card")
 def retrieve_cards():
@@ -54,8 +53,6 @@ def delete_board(board_id):
     db.session.delete(board)
     db.session.commit()
 
-=======
->>>>>>> 9f3f22e0b8d4f9ecfb5ac1f5c087e55c8aaf746f
 
 # CREATE
 # Create a new board
