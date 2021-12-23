@@ -8,6 +8,51 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
 # each HTTP method should have it's own function to follow the single responsbility principle
+@cards_bp.route("", methods=["GET"])
+@cards_bp.route("/<board>/card")
+def retrieve_cards():
+    if request.method == 'GET':
+        cards = Card.query.all()
+        cards_response = []
+        for card in cards:
+            cards_response.append(card.card_dict())
+
+        return jsonify(cards_response), 200
+
+
+@cards_bp.route("/<card_id>", methods= ["GET", "PUT","DELETE"])
+def retrieve_get_card(card_id):
+    card = Card.query.get(card_id)
+    if "card" is None: 
+        return jsonify(None), 404
+    elif request.method == "GET":
+        pass
+    elif request.method == "PUT":
+        pass
+
+    elif request.method == "DELETE":
+        db.session.delete(card)
+        db.session.commit()
+
+        return {
+            "message": (f"Card {card_id} has been deleted")
+        }
+
+
+#Delete created and needs to be modified.    
+@boards_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = Board.query.get(board_id) 
+    # cards = #Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
+    # cascading delete 
+
+    # for card in cards:
+    for card in board.cards:
+        db.session.delete(card)
+        #db.session.commit()
+    db.session.delete(board)
+    db.session.commit()
+
 
 # CREATE
 # Create a new board
