@@ -1,18 +1,12 @@
 from app import db
 
 class Board(db.Model):
-    """
-    Board model
-    """
     __tablename__ = 'board'
     board_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     owner = db.Column(db.String(255))
 
     def to_dict(self):
-        """
-        Create a dictionary representation of the board
-        """
         return {
             'board_id': self.board_id,
             'title': self.title,
