@@ -10,15 +10,21 @@ migrate = Migrate()
 load_dotenv()
 
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-        "SQLALCHEMY_DATABASE_URI")
+    if not test_config:
+        app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+            "SQLALCHEMY_DATABASE_URI")
+    else:
+        app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+            "SQLALCHEMY_TEST_DATABASE_URI")
 
     # Import models here for Alembic setup
-    # from app.models.ExampleModel import ExampleModel
+    from app.models.board import Board
+    from app.models.board import Card
 
     db.init_app(app)
     migrate.init_app(app, db)
