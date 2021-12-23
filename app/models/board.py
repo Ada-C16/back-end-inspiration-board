@@ -11,6 +11,7 @@ class Board(db.Model):
         board = Board.query.get(self.board_id)
 
         return {
+            "id": self.board_id,
             "title": self.title,
             "owner": self.owner
         }

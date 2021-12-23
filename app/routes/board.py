@@ -25,7 +25,7 @@ def post_board():
         response_body = {"details": "Request body must include name."}
         return jsonify(response_body), 400
     elif "owner" not in request_body:
-        response_body = {"details": "Request body must include postal_code."}
+        response_body = {"details": "Request body must include owner."}
         return jsonify(response_body), 400
 
     new_board = Board(
@@ -73,7 +73,7 @@ def create_cards_in_board(board_id):
 
     request_body = request.get_json()
 
-    if "message" not in request_body:
+    if "message" not in request_body or request_body == None:
         response_body = {"details": "Request body must include message."}
         return jsonify(response_body), 400
     
@@ -84,4 +84,4 @@ def create_cards_in_board(board_id):
     db.session.add(new_card)
     db.session.commit()
     response_body = new_card.create_card_dict()
-    return jsonify(response_body), 200
+    return jsonify(response_body), 201
