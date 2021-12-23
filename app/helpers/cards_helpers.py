@@ -19,3 +19,20 @@ def require_valid_request_body(endpoint):
         else:
             return endpoint(*args, request_body=request_body, **kwargs)
     return fn
+
+# Decorator to check if id is an integer and if the card exists.
+def require_valid_id(endpoint):
+    @wraps(endpoint)
+    def fn(*args, card_id, **kwargs):
+        try:
+            card_id = int(card_id)
+        except ValueError:
+            return {"message": "Card id needs to be an integer"}, 400
+
+        card = Card.query.get(card_id)
+
+        if not card: 
+            return {"message": f"Card {card_id} was not found"}, 404
+
+        return endpoint(*args, card=card, **kwargs)
+    return fn

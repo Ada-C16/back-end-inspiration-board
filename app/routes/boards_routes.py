@@ -50,7 +50,8 @@ def one_board(board):
             return {"details": "Request body must include message."}, 400
         
         new_card = Card()
-        new_card.update_attributes(request_body)
+        board_id = board.board_id
+        new_card.update_attributes(board_id, request_body)
 
         db.session.add(new_card)
         db.session.commit()
@@ -70,7 +71,7 @@ def cards_of_one_board(board):
     for card in boards_cards:
         all_cards.append(card.card_details()) # May need to break this up into two separate steps. Wanted to see if this implementation worked.
 
-    return all_cards, 200
+    return jsonify(all_cards), 200
 
 
 # Enhancement ideas - DELETE, PUT/PATCH board info
