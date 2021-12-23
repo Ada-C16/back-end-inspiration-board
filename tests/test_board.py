@@ -35,7 +35,6 @@ def test_get_boards_one_saved(client, one_board):
     assert response_body[0]["board_id"] == BOARD_ID
     assert response_body[0]["title"] == TITLE
     assert response_body[0]["owner"] == OWNER
-    # assert response_body[0]["cards"] == CARD_ID
 
 def test_get_board_by_id(client, one_board):
     # Act
@@ -46,7 +45,6 @@ def test_get_board_by_id(client, one_board):
     assert response_body[0]["board_id"] == BOARD_ID
     assert response_body[0]["title"] == TITLE
     assert response_body[0]["owner"] == OWNER
-    # assert response_body[0]["cards"] == CARD_ID
 
 def test_get_board_by_id_not_found(client):
     # Act
