@@ -6,7 +6,7 @@ from app.models.card import Card
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 
-@boards_bp.route("", methods=["GET", "POST"])
+@boards_bp.route("", methods=["GET", "POST", "DELETE"])
 def handle_boards():
     if request.method == "POST":
         request_body = request.get_json()
@@ -36,6 +36,16 @@ def handle_boards():
                 "owner" : board.owner
             })
         return jsonify(boards_response), 200
+
+
+@boards_bp.route("/<id>", methods=["DELETE"]) 
+def handle_board(id):
+    board = Board.query.get(id)
+    if request.method == "DELETE":
+        db.session.delete(board)
+        db.session.commit()
+        return make_response(f"Board #{id} successfully deleted")
+
 
 # Create route for when user selects a specific board to work on 
 # for likes count, will need to have an API for put to update likes
