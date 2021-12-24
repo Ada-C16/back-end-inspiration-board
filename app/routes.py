@@ -17,7 +17,6 @@ def create_board():
     if "owner" not in request_body or "title" not in request_body:
         return jsonify("Not Found"), 404
 
-    # 'name' represents "Owners name" in the form on the frontend
     new_board = Board(owner=request_body["owner"], title=request_body["title"])
 
     db.session.add(new_board)
@@ -27,36 +26,40 @@ def create_board():
 
 
 # Create a new card
-@boards_bp.route("/<board_id>/cards", methods=['POST'])
+@cards_bp.route("/<board_id>/cards", methods=['POST'])
 #front-end needs a click event to provide API call to backend with board id
 def create_card(board_id):
-    # board = Board.query.get(board_id)
-    request_body = request.get_json()
-
-    if "title" not in request_body or "message" not in request_body:
+    board = Board.query.get(board_id)
+    if board is None:
         return jsonify("Not Found"), 404
 
-    # 'title' represents the Board's "Title"
-    new_card = Card(title=request_body["title"], message=request_body["message"], likes_count=0)
+    request_body = request.get_json()
+
+    if "message" not in request_body:
+        return jsonify("Not Found"), 404
+
+    new_card = Card(board_id = board.id, message=request_body["message"], likes_count=0)
 
     db.session.add(new_card)
     db.session.commit()
 
-    return jsonify(f"Card for board: {new_card.title} successfully created."), 201
+    return jsonify(f"Card number {new_card.card_id} successfully created."), 201
 
 
 
 # READ
 # All cards within a board
-# @cards_bp.route("", methods=["GET"])
 @boards_bp.route("/<board_id>/cards", methods=['GET'])
 def retrieve_cards(board_id):
     board = Board.query.get(board_id)
+    if board is None:
+        return jsonify("Not Found"), 404
+        
     cards_response = [card.card_dict() for card in board.cards]
 
     return jsonify(cards_response), 200
 
-# each HTTP method should have it's own function to follow the single responsbility principle
+
 @boards_bp.route("", methods=["GET"])
 def retrieve_boards():
     boards = Board.query.all()
@@ -64,8 +67,6 @@ def retrieve_boards():
     
     return jsonify(boards_response), 200
 
-
-# All boards (board names) listed on Inspiration Board
 
 # UPDATE
 # Can update cards by adding 'likes'
@@ -79,34 +80,27 @@ def update_card(card_id):
 
     db.session.commit()
 
-    return jsonify(f"Card {card.id} successfully updated"), 200
+    return jsonify(f"Card {card.card_id} successfully updated. Current likes count = {card.likes_count}"), 200
 
 
 # DELETE
-
 # Can delete a single board
-
-
 @boards_bp.route("/<board_id>", methods=["DELETE"])
 def delete_board(board_id):
     board = Board.query.get(board_id) 
-    # cards = #Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
-    # cascading delete 
 
-    # for card in cards:
     for card in board.cards:
         db.session.delete(card)
-        #db.session.commit()
     db.session.delete(board)
     db.session.commit()
 
     return jsonify(f"Board {board.id} successfully deleted.")
-# Can delete cards in a board
 
+
+# Can delete cards in a board
 @cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = Card.query.get(card_id) 
-    # cards = Card.query.get(board.cards) does this return card object or id(OBJECT IS BETTER)
 
     db.session.delete(card)
     db.session.commit()
