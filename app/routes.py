@@ -22,7 +22,7 @@ def create_board():
     db.session.add(new_board)
     db.session.commit()
 
-    return jsonify(f"Board: {new_board.title} successfully created."), 201
+    return jsonify(f"{new_board.title} successfully created."), 201
 
 
 # Create a new card
