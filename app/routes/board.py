@@ -17,8 +17,18 @@ def validate_request_body(request_body):
     return True
 
 # GET /boards
+@bp.route("", methods=["GET"])
+def get_board():
+    """Reads all created boards"""
+    boards_response = []
+    boards = Board.query.all()
 
-# POST /boards
+    for board in boards:
+        boards_response.append(board.to_dict())
+
+    return jsonify(boards_response), 200
+
+# POST /board
 @bp.route("", methods=["POST"])
 def post_board():
     """Creates a new board from user input."""

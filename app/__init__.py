@@ -28,6 +28,5 @@ def create_app():
     app.register_blueprint(board.bp)
     # app.register_blueprint(card.bp)
 
-
     CORS(app)
     return app
