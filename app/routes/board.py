@@ -48,6 +48,34 @@ def post_board():
 
     return jsonify({"message": f"Created {new_board.title} successfully."}), 201
 
-# GET /boards/<board_id>/cards
+# GET and POST for  /boards/<board_id>/cards
 
-# POST /boards/<board_id>/cards
+@bp.route("/<board_id>/cards", methods=["GET", "POST"])
+def handle_cards(board_id):
+    board = Board.query.get(board_id)
+    if board is None:
+        return "The board does not exist!", 404
+
+    if request.method == "POST":
+        request_body = request.get_json()
+        if "message" not in request_body:
+            abort(make_response({"error": "Card must include message!"}, 400))
+        new_card = Card(
+        message=request_body["message"],
+        likes_count=0,
+        board_id=board_id
+    )
+        db.session.add(new_card)
+        db.session.commit()
+        return jsonify({"message": f"New card is successfully created."}), 201
+
+    elif request.method == "GET":
+        cards_response = []
+    for card in board.card:
+        cards_response.append(card.to_dict())
+
+    return jsonify({
+        "id":board.board_id,
+        "title":board.title,
+        "cards" :cards_response
+        })
