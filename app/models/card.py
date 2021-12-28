@@ -22,5 +22,3 @@ class Card(db.Model):
         )
 
         return card 
-
-        

@@ -68,7 +68,20 @@ def delete_card(card_id):
 #BOARDS
 
 #read - GET
+@boards_bp.route("/<board_id>", methods=["GET"])
+def get_board(board_id):
+    if not board_id.isnumeric():
+        return jsonify(None), 400
 
+    board = Board.query.get(board_id)
+
+    if not board:
+        return jsonify({'message' : f'Card {board_id} was not found'}), 404
+
+    # return jsonify(board.board_dict()), 200
 #create - POST
+@boards_bp.route("/<board_id>", methods=["POST"])
+def post_board():
+
 
 #delete - DELETE
