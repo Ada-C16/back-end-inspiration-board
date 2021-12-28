@@ -68,6 +68,33 @@ def delete_card(card_id):
 #BOARDS
 
 #read - GET
+@boards_bp.route("", methods=["GET"])
+def get_boards():
+    boards = Board.query.all()
+
+    response = []
+    for board in boards:
+        response.append(board.to_dict())
+
+    return jsonify(response), 200
+#create - POST
+@boards_bp.route("", methods=["POST"])
+def post_board():
+    request_body = request.get_json()
+    try:
+        new_board = Board.from_dict(request_body)
+        db.session.add(new_board)
+        db.session.commit()
+
+        return jsonify(new_board.to_()), 201
+    except:
+        response = {
+            "details" : "Invalid request body"
+        }
+
+        return jsonify(response), 400
+
+#read (1) - GET
 @boards_bp.route("/<board_id>", methods=["GET"])
 def get_board(board_id):
     if not board_id.isnumeric():
@@ -78,14 +105,18 @@ def get_board(board_id):
     if not board:
         return jsonify({'message' : f'Card {board_id} was not found'}), 404
 
-    # return jsonify(board.board_dict()), 200
-#create - POST
-@boards_bp.route("/<board_id>", methods=["POST"])
-def post_board():
-
-
-
-
-#read (1) - GET
-
+    return jsonify(board.board_dict()), 200
 #delete (1) - DELETE
+@boards_bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    board = Board.query.get(board_id)
+
+    if not board:
+        return jsonify({'message' : f'Board {board_id} was not found'}), 404
+    
+    db.session.delete(board)
+    db.session.commit()
+    return jsonify({
+        'id': board.board_id,
+        'details': f'Board {board.board_id} succesfully deleted'
+    }), 200
