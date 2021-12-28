@@ -70,7 +70,6 @@ def create_board():
 #CREATE ONE CARD ON A SPECIFIC BOARD
 @boards_bp.route("/<board_ID>", methods=["POST"])
 @validate_board
-@validate_card
 def create_card(board_ID):
     request_body = request.get_json()
     
