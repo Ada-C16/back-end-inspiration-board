@@ -19,7 +19,8 @@ def post_one_card():
     else:
         # taking info fr request_body and converting it to new Card object    
         new_card = Card(message=request_body["message"],
-                        increase_likes= 0)
+                        increase_likes= 0,
+                        board_id = request_body["board_id"])
         # committing changes to db
         db.session.add(new_card)
         db.session.commit()
@@ -112,3 +113,20 @@ def CRUD_one_board(board_id):
         db.session.delete(board)
         db.session.commit()
         return make_response({'message': f"Board {board.id} was deleted"}, 200)
+
+@boards_bp.route("/<board_id>/cards", methods=["GET"])
+def get_all_boards_for_one_board(board_id):
+    # query Board table using board_id
+    board_query = Board.query.get(board_id)
+    # guard clause to check the board_id is valid
+    if board_query:
+    # query and return all Card objects with the specified board_id as their foreign key
+        cards_for_boards = Card.query.filter_by(board_id=board_id).all()
+    # iterate through the list of returned Card objects, use helper function to convert to dict
+    # and store in list named cards_response.  Need objects to be dicts so front end can access their data
+        cards_response = []
+        for card in cards_for_boards:
+            cards_response.append(card.convert_to_dict())
+        return jsonify(cards_response), 200
+    else:
+        return jsonify({"message": f"Board {board_id} was not found"}), 404
