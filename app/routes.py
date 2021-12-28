@@ -71,4 +71,8 @@ def delete_card(card_id):
 
 #create - POST
 
-#delete - DELETE
+
+
+#read (1) - GET
+
+#delete (1) - DELETE
