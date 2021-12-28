@@ -20,7 +20,7 @@ def handle_boards():
             db.session.add(new_board)
             db.session.commit()
             return make_response(
-                {"board id": new_board.board_id, 
+                {"board_id": new_board.board_id, 
                 "title":new_board.title,
                 'owner':new_board.owner},
             201)
@@ -31,28 +31,45 @@ def handle_boards():
 
         for board in boards:
             boards_response.append({
-                "board id": board.board_id,
+                "board_id": board.board_id,
                 "title": board.title,
                 "owner": board.owner
             }) 
         return jsonify(boards_response)
 
-# May not be necessary since we need to link all cards to a board but keep for now
-@boards_bp.route("/<board_id>", methods = ["GET"])
-def handle_board(board_id):
-    try:
-        board = Board.query.get(board_id)
-    except:
-        return {"details": "Invalid data"}, 400 # For when you enter /asdjsaiod instead of a num
 
-    if board is None:
-        return {"message": f" Board {board_id} not found"}, 404 # For when you enter /5 but there is no board_id of 5 in db
+# May not be necessary since we need to link all cards to a board but keep for now
+@boards_bp.route("/<board_id>", methods = ["GET", "DELETE"])
+def handle_board(board_id):
+    if request.method == "GET":
+        try:
+            board = Board.query.get(board_id)
+        except:
+            return {"details": "Invalid data"}, 400 # For when you enter /asdjsaiod instead of a num
+
+        if board is None:
+            return {"message": f" Board {board_id} not found"}, 404 # For when you enter /5 but there is no board_id of 5 in db
+        
+        # If valid, then return response abt the specific board
+        return {"board id": board.board_id,
+                "title": board.title,
+                "owner": board.owner
+        }
     
-    # If valid, then return response abt the specific board
-    return {"board id": board.board_id,
-            "title": board.title,
-            "owner": board.owner
-    }
+    elif request.method == "DELETE":
+        try:
+            board = Board.query.get(board_id)
+        except: 
+            return {"details": "Invalid data"}, 400 #
+
+        if board is None:
+            return {"message": f"Board {board_id} not found"}, 404
+
+
+        db.session.delete(board)
+        db.session.commit()
+
+        return {"details": f"Board {board_id} has been deleted"}
 
 @boards_bp.route("/<board_id>/cards", methods= ["POST", "GET"])
 def handle_boards_cards(board_id):
