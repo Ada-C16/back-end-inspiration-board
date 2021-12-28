@@ -84,4 +84,8 @@ def get_board(board_id):
 def post_board():
 
 
-#delete - DELETE
+
+
+#read (1) - GET
+
+#delete (1) - DELETE
