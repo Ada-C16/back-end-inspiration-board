@@ -21,8 +21,8 @@ def test_get_cards_one_saved_card(client, one_card):
         }
     ]
 
-def test_create_card(client):
-    response = client.post("/cards", json={"message": "@donutdadd"})
+def test_create_card(client, one_board):
+    response = client.post("/cards/1", json={"message": "@donutdadd"})
     response_body = response.get_json()
 
     assert response.status_code == 201
@@ -33,8 +33,8 @@ def test_create_card(client):
     assert new_card.message == "@donutdadd"
     assert new_card.likes_count == 0
 
-def test_create_card_failed(client):
-    response = client.post("/cards", json={})
+def test_create_card_failed(client, one_board):
+    response = client.post("/cards/1", json={})
     response_body = response.get_json()
 
     assert response.status_code == 400
