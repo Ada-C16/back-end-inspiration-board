@@ -81,8 +81,6 @@ def create_card(board_ID):
         message = request_body["message"],
         likes_count = 0,
         board_id = board_ID
-        # Hardcoded likes, could set as default value.
-        #I researched this and couldn't find a way to do so - Reid
     )
     db.session.add(new_card)
     db.session.commit()
@@ -99,7 +97,8 @@ def get_all_cards_from_a_board(board_id):
         output_dicts_list.append({
             "card_id":card.card_id,
             "message":card.message,
-            "board_id":card.board_id #i just did this for testing we can take out
+            "board_id":card.board_id 
+            #we want to return the likes_count in this dictionary here so that each card like count renders correctly
             })
     return jsonify(output_dicts_list), 201
 
@@ -116,6 +115,7 @@ def get_one_card_from_a_board(board_ID, card_ID):
             "card_id":card.card_id,
             "message":card.message,
             "board_id":card.board_id #i just did this for testing we can take out
+            #return likes-count here too
             }), 201
 
 # GET ALL BOARDS
@@ -173,6 +173,24 @@ def delete_one_teeny_tiny_card(board_ID, card_ID):
     card = Card.query.get(card_ID)
     if card:
         db.session.delete(card)
+        db.session.commit()
+        response = {"message": f"Card {card.card_id} was deleted."}
+        return response, 200
+    return {"message": f"Card id {card_ID} isn't real."},400
+
+
+#PATCH REQUEST TO INCREMENT CARD.LIKES_COUNT BY 1
+@boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["DELETE"])
+@validate_board
+def add_one_to_likes_count(board_ID, card_ID):
+    card = Card.query.get(card_ID)
+    if card:
+        card = {
+
+        }
+
+
+        db.session.add(card)
         db.session.commit()
         response = {"message": f"Card {card.card_id} was deleted."}
         return response, 200
