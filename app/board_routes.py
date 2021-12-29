@@ -180,18 +180,13 @@ def delete_one_teeny_tiny_card(board_ID, card_ID):
 
 
 #PATCH REQUEST TO INCREMENT CARD.LIKES_COUNT BY 1
-# @boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["PATCH"])
-# @validate_board
-# def add_one_to_likes_count(board_ID, card_ID):
-#     card = Card.query.get(card_ID)
-#     if card:
-#         card = {
-
-#         }
-
-
-#         db.session.add(card)
-#         db.session.commit()
-#         response = {"message": f"Card {card.card_id} was deleted."}
-#         return response, 200
-#     return {"message": f"Card id {card_ID} isn't real."},400
+@boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["PATCH"])
+@validate_board
+def add_one_to_likes_count(board_ID, card_ID):
+    card = Card.query.get(card_ID)
+    if card:
+        card.likes_count = int(card.likes_count) + 1
+        db.session.commit()
+        response = {"message": f"Card {card.card_id} likes count was updated to {card.likes_count}"}
+        return response, 200
+    return {"message": f"Card id {card_ID} isn't real."},400
