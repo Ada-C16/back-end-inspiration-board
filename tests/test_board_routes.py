@@ -13,7 +13,7 @@ def test_get_boards_one_saved_board(client, one_board):
 
     assert response.status_code == 200
     assert len(response_body) == 1
-    assert response_body == ['Cool Artists on Instagram']
+    assert response_body == [['Cool Artists on Instagram',1]]
 
 def test_create_board(client):
     response = client.post("/boards", json={"title": 'Food Board', "owner": 'Juliana'})
