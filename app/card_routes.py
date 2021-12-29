@@ -1,8 +1,8 @@
 from app import db
 from app.models.card import Card
-from flask import Blueprint, request, make_response, jsonify
-import requests
-import os
+from flask import Blueprint, request, jsonify
+from app.models.board import Board
+
 
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
@@ -18,14 +18,18 @@ def handle_cards():
         })
     return jsonify(card_info), 200
 
-@cards_bp.route("/<id>", methods=["POST"])
-def post_card():
+@cards_bp.route("/<boardid>", methods=["POST"])
+def post_card(boardid):
     request_body = request.get_json()
     try: 
         card = Card(message = request_body["message"])
     except:
         return jsonify("unsuccessful post"), 400
+    board = Board.query.get(boardid)
+    if board is None:
+        return jsonify(""), 404
     db.session.add(card)
+    board.cards.append(card)
     db.session.commit()
     return jsonify("successful post"), 201
 
@@ -45,4 +49,4 @@ def delete_card(id):
         return jsonify(""), 404
     db.session.delete(card)
     db.session.commit()
-    return jsonify(f"successfully deleted {card.message}"), 200 
+    return jsonify(f"successfully deleted {card.message}"), 200
