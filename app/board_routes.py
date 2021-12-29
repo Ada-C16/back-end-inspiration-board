@@ -96,7 +96,8 @@ def get_all_cards_from_a_board(board_id):
         output_dicts_list.append({
             "card_id":card.card_id,
             "message":card.message,
-            "board_id":card.board_id 
+            "board_id":card.board_id,
+            "likes_count":card.likes_count
             #we want to return the likes_count in this dictionary here so that each card like count renders correctly
             })
     return jsonify(output_dicts_list), 201
@@ -113,8 +114,8 @@ def get_one_card_from_a_board(board_ID, card_ID):
     return jsonify({
             "card_id":card.card_id,
             "message":card.message,
-            "board_id":card.board_id #i just did this for testing we can take out
-            #return likes-count here too
+            "board_id":card.board_id,
+            "likes_count":card.likes_count
             }), 201
 
 # GET ALL BOARDS
@@ -179,18 +180,18 @@ def delete_one_teeny_tiny_card(board_ID, card_ID):
 
 
 #PATCH REQUEST TO INCREMENT CARD.LIKES_COUNT BY 1
-@boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["DELETE"])
-@validate_board
-def add_one_to_likes_count(board_ID, card_ID):
-    card = Card.query.get(card_ID)
-    if card:
-        card = {
+# @boards_bp.route("/<board_ID>/cards/<card_ID>", methods=["PATCH"])
+# @validate_board
+# def add_one_to_likes_count(board_ID, card_ID):
+#     card = Card.query.get(card_ID)
+#     if card:
+#         card = {
 
-        }
+#         }
 
 
-        db.session.add(card)
-        db.session.commit()
-        response = {"message": f"Card {card.card_id} was deleted."}
-        return response, 200
-    return {"message": f"Card id {card_ID} isn't real."},400
+#         db.session.add(card)
+#         db.session.commit()
+#         response = {"message": f"Card {card.card_id} was deleted."}
+#         return response, 200
+#     return {"message": f"Card id {card_ID} isn't real."},400
