@@ -18,7 +18,7 @@ def handle_cards():
         })
     return jsonify(card_info), 200
 
-@cards_bp.route("", methods=["POST"])
+@cards_bp.route("/<id>", methods=["POST"])
 def post_card():
     request_body = request.get_json()
     try: 
