@@ -58,6 +58,7 @@ def test_get_one_card_from_one_board(client, one_card_belongs_to_one_board):
     assert response.status_code == 200
     assert response_body["title"] == "Cool Artists on Instagram"
     assert response_body["owner"] == "Karishma"
+    assert response_body["id"] == 1
     assert len(response_body["cards"]) == 1
     assert {
             "id": 1,
@@ -72,6 +73,7 @@ def test_get_multiple_cards_from_one_board(client, multiple_cards_belong_to_one_
     assert response.status_code == 200
     assert response_body["title"] == "Cool Artists on Instagram"
     assert response_body["owner"] == "Karishma"
+    assert response_body["id"] == 1
     assert len(response_body["cards"]) == 4
     assert {
             "id": 1,

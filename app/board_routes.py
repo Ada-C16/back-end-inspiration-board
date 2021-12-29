@@ -38,7 +38,8 @@ def get_board_cards(id):
     board_info = {
         "title": board.title,
         "owner": board.owner,
-        "cards": cards
+        "cards": cards,
+        "id": int(id)
     }
     return jsonify(board_info), 200
 
