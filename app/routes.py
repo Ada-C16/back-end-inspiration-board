@@ -15,8 +15,8 @@ def handle_boards():
         if "owner" not in request_body or request_body["owner"] == "":
             return jsonify(details="Invalid request, an owner is required."), 400
 
-        print(request_body["title"])
-        print(request_body["owner"])
+        # print(request_body["title"])
+        # print(request_body["owner"])
         new_board = Board(title=request_body["title"], owner=request_body["owner"])
 
 
@@ -24,7 +24,10 @@ def handle_boards():
         db.session.add(new_board)
         db.session.commit()
 
-        return make_response(f"Board {new_board.title} successfully created", 201)
+         # Updated POST request return statement to return data instead of a statement per front-end team request
+        # previous code:
+        # return make_response(f"Board {new_board.title} successfully created", 201)
+        return jsonify({"board":{"board_id": new_board.id, "owner": new_board.owner, "title": new_board.title}}), 201
 
     if request.method == "GET":
         boards = Board.query.all()
@@ -65,7 +68,11 @@ def handle_board_cards(id):
         db.session.add(new_card)
         db.session.commit()
 
-        return make_response(f"A new card was successfully created for board: {id} .", 201)
+        # Updated POST request return statement to return data instead of a statement per front-end team request
+        # previous code:
+        # return make_response(f"A new card was successfully created for board: {id} .", 201)
+
+        return jsonify({"card":{"board_id": new_card.board_id, "card_id": new_card.id, "likes_count": new_card.likes_count, "message": new_card.message}}), 201
     
     if request.method == "GET":
         
