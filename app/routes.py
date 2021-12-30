@@ -34,6 +34,8 @@ def get_cards_from_one_board(board_id):
 
 board_bp.route("", methods = ["POST"])
 def create_new_board():
+    """Adds new board to db and returns new board ID and 201 code or
+    400 error if request body is missing title or owner."""
     request_body = request.get_json()
 
     valid_input(request_body, Board)
@@ -54,6 +56,19 @@ def create_new_board():
         # - db.session.commit()
         # Note here we want to delete all boards but one, we want to leave a defualt board like the example
 # 3. make_response("All but default board have been deleted", 200)
+board_bp.route("", methods = ["DELETE"])
+def delete_all_boards_but_default():
+    """"""
+    boards = Board.query.filter_by(Board.board_id != 1).all()
+
+    for board in boards: 
+        if board.cards:
+            for card in board.cards: 
+                delete_from_database(card)
+
+        delete_from_database(board)
+
+    return {"All boards but 'Inspirandwich Love' were deleted."}, 200
 
 ####---------------------------------------------------####
 ####------------------ CARD ENDPOINTS -----------------####
