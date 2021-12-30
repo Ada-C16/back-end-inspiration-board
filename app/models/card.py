@@ -5,7 +5,7 @@ class Card(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     message = db.Column(db.String)
     increase_likes = db.Column(db.Integer)
-    board_id = db.Column(db.Integer, db.ForeignKey('board.id'), primary_key=True, nullable=False)
+    board_id = db.Column(db.Integer, db.ForeignKey('board.id'), nullable=False)
     # this relationship establishes a new attribute for each Card object, which allows it to access the Board object
     # through Card.board and a second new attribute, Board.cards (plural bc each Board has multiple Cards)
     board =db.relationship('Board', backref='cards')
@@ -14,4 +14,3 @@ class Card(db.Model):
         return { "id": self.id,
                 "message": self.message,
                 "increase_likes": self.increase_likes}
-                                        
