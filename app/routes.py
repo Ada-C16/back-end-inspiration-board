@@ -47,18 +47,10 @@ def create_new_board():
     
     return {"new board id": new_board.board_id}, 201
 
-# ---7----
-# Route: "/boards"
-# Method: DELETE
-# 1. database query boards
-# 2. If board in query result does not equal the defualt board:
-        # - db.session.delete(board)
-        # - db.session.commit()
-        # Note here we want to delete all boards but one, we want to leave a defualt board like the example
-# 3. make_response("All but default board have been deleted", 200)
 board_bp.route("", methods = ["DELETE"])
 def delete_all_boards_but_default():
-    """"""
+    """Deletes all boards and cards associated with boards from database, 
+    except for the default board."""
     boards = Board.query.filter_by(Board.board_id != 1).all()
 
     for board in boards: 
@@ -68,7 +60,7 @@ def delete_all_boards_but_default():
 
         delete_from_database(board)
 
-    return {"All boards but 'Inspirandwich Love' were deleted."}, 200
+    return {"All boards but one were deleted."}, 200
 
 ####---------------------------------------------------####
 ####------------------ CARD ENDPOINTS -----------------####
