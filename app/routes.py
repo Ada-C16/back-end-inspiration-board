@@ -1,9 +1,10 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
+from app.models.board import Board
+from app.models.card import Card
 
-# example_bp = Blueprint('example_bp', __name__)
-board_bp = Blueprint('board_bp', __name__, url_prefix="/boards")
-card_bp = Blueprint('card_bp', __name__, url_prefix="/cards")
+board_bp = Blueprint('boards', __name__, url_prefix="/boards")
+card_bp = Blueprint('cards', __name__, url_prefix="/cards")
 
 
 ####---------------------------------------------------####
