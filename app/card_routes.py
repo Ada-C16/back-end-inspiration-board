@@ -18,7 +18,7 @@ def create_card():
     elif  len(request_body["message"]) < 1: 
         return jsonify({"details": "Message can not be empty"}), 400
     elif len(request_body["message"]) > 40: 
-        return jsonify({"details": "Message exceeds 40 charachter limit"}), 400
+        return jsonify({"details": "Message exceeds 40 characters limit"}), 400
     else : 
         new_card = Card(
             message = request_body["message"],
@@ -75,7 +75,7 @@ def delete_specific_card(card_id):
     else:
         db.session.delete(card)
         db.session.commit()
-        return jsonify({"details": f"Card {card_id} was succsessfully deleted"}), 200
+        return jsonify({"details": f"Card {card_id} was successfully deleted"}), 200
     
 ##Helpers 
 def build_a_card_response(card):
