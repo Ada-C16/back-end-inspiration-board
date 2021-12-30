@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.board import Board
 from app.models.card import Card
-from helper_functions import *
+from .helper_functions import *
 
 board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 card_bp = Blueprint("cards", __name__, url_prefix="/cards")
@@ -32,17 +32,17 @@ def get_boards():
 # 4. turn response into a list of dictionaries
 #       - [{"card_id":card_id, "message":owner, "likes_count": likes_count}, {}, {}]
 # 4. return jsonify(cards_response, 200)
-@board_bp.route("</board_id>", methods = ["GET"])
+@board_bp.route("/<board_id>", methods = ["GET"])
 def get_one_board(board_id):
     """Input: ID of board. 
-    Returns dictionary of board info or
+    Returns list of dictionaries with card info for
+    cards associated with this board or
     404 if it doesn't exist."""
     board = valid_id(Board, board_id)
 
     board = board.to_dict()
 
     return board, 200
-
 
 # ---6----
 # Route: "/boards"
