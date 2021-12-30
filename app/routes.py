@@ -3,29 +3,21 @@ from app import db
 from app.models.board import Board
 from app.models.card import Card
 
-board_bp = Blueprint('boards', __name__, url_prefix="/boards")
-card_bp = Blueprint('cards', __name__, url_prefix="/cards")
+board_bp = Blueprint("boards", __name__, url_prefix="/boards")
+card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 
 ####---------------------------------------------------####
 ####----------------- BOARD ENDPOINTS -----------------####
 ####---------------------------------------------------####
 
-# ---1----
-# Route: "/boards"
-# Method: GET
-# 1. boards_response = []
-# 2. database request -> boards = Board.query....
-# 3. turn response into a list of dictionaries?
-#           - [{"board_id":board_id, "owner":owner, "title": title}, {}, {}]
-# 4. return jsonify(boards_response, 200)
+@board_bp.route("", methods = ["GET"])
+def get_boards(): 
+    """Returns list of dictionaires with board information"""
+    boards = Board.query.all()
+    boards_response = [board.to_dict() for board in boards]
 
-
-# @board_bp.route("", methods=["GET"])
-# def create_board():
-#     boards_response = []
-#     boards = Board.query
-#     
+    return jsonify(boards_response), 200
 
 # ---2----
 # Route: "/boards/<board_id>"
