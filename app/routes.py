@@ -20,29 +20,19 @@ def get_boards():
 
     return jsonify(boards_response), 200
 
-# ---2----
-# Route: "/boards/<board_id>"
-# Method: GET
-# 1. Data check -> 
-#       - is it numeric? make_response({"message" : "Please enter a valid board id"}, 400)
-#       - does board_id exist? make_response({"message" : f"{entity} {id} was not found"}, 404)
-# 2. database query 
-#       - cards = db.session.query(Card).filter(Card.board_id==board_id)
-# 3. cards_response = []
-# 4. turn response into a list of dictionaries
-#       - [{"card_id":card_id, "message":owner, "likes_count": likes_count}, {}, {}]
-# 4. return jsonify(cards_response, 200)
 @board_bp.route("/<board_id>", methods = ["GET"])
-def get_one_board(board_id):
+def get_cards_from_one_board(board_id):
     """Input: ID of board. 
     Returns list of dictionaries with card info for
     cards associated with this board or
     404 if it doesn't exist."""
     board = valid_id(Board, board_id)
 
-    board = board.to_dict()
+    cards = board.cards
 
-    return board, 200
+    cards_response = [card.to_dict() for card in cards]
+
+    return jsonify(cards_response), 200
 
 # ---6----
 # Route: "/boards"
