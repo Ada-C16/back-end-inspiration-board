@@ -29,7 +29,7 @@ def create_card():
         response_body = build_a_card_response(new_card)
         return jsonify(response_body), 201
 
-#FE Action ??
+#FE Action: Click a board title => all cards related to that board id (dont need)
 ## Reads a single card with current message and likes count
 # Expected: card_id # => error message or card object 
 @card_bp.route("/<card_id>", methods=["GET"])
