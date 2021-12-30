@@ -41,11 +41,11 @@ def get_all_boards():
             "title": board.title,
             "owner": board.owner
         }) 
-    return jsonify(all_boards_response)
+    return jsonify(all_boards_response), 200
 
 
 @board_bp.route("/<board_id>", methods=["GET"])
-def get_specific_board(board_id):       # read all cards of a specific board
+def get_info_of_specific_board(board_id):  
     try: 
         board = Board.query.get(board_id)
 
@@ -53,7 +53,7 @@ def get_specific_board(board_id):       # read all cards of a specific board
             "id": board_id,
             "title": board.title,
             "owner": board.owner
-        }, 200
+        }, 200;
     except:
         return  {"details": f"Board {board_id} not found"}, 404
     
@@ -75,28 +75,17 @@ def get_all_cards_specific_board(board_id):       # read all cards of a specific
         return  {"details": f"Board {board_id} not found"}, 404
     
     
-    
-    
-# @board_bp.route("", methods=["DELETE"])
-# def delete_all_boards():
-#     return 200
+@board_bp.route("", methods=["DELETE"])
+def delete_all_boards():
+    all_boards = Board.query.all()
+    for board in all_boards:
+        db.session.delete(board)
+        db.session.commit()
+    return {"details": "all boards were successfully deleted"}, 200
 
-
-
-
-
-# @card_bp.route("", methods=["POST"])
-# def create_card():
-#     return 200
-
-# @card_bp.route("/<card_id>", methods=["DELETE"])
-# def delete_specific_card(card_id):
-#     return 200
-
-# @card_bp.route("/<card_id>", methods=["PATCH"])
-# def update_likes_count(card_id):
-#     return 200
-    
-# @card_bp.route("/<card_id>", methods=["GET"])
-# def show_likes_count(card_id):
-#     return 200
+@board_bp.route("<board_id>", methods=["DELETE"])
+def delete_a_specific_board(board_id):
+    board = Board.query.get_or_404(board_id)
+    db.session.delete(board)
+    db.session.commit()
+    return {"details": f"Board {board_id} was successfully deleted"}, 200

@@ -6,4 +6,3 @@ class Card(db.Model):
     message = db.Column(db.String)
     likes_count = db.Column(db.Integer)
     board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
-    board = db.relationship("Card", back_populates="cards")
