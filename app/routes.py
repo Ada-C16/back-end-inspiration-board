@@ -32,19 +32,18 @@ def get_cards_from_one_board(board_id):
 
     return jsonify(cards_response), 200
 
-# ---6----
-# Route: "/boards"
-# Method: POST
-# 1. request_body = request.get_json()
-# 2. check request data - make sure title and owner are present
-# 3. create new board 
-        # - new_board = Board(title=request_body["title"], owner=request_body["owner"])
-# 4. db.session.add(new_board)
-# 5. db.session.commit()
-# 4. return ....what to return here?? dict of new board? + 200 OK?
 board_bp.route("", methods = ["POST"])
 def create_new_board():
+    request_body = request.get_json()
+
+    valid_input(request_body, Board)
+
+    new_board = Board(title = request_body["title"],
+                    owner = request_body["owner"])
+
+    add_to_database(new_board)
     
+    return {"new board id": new_board.board_id}, 201
 
 # ---7----
 # Route: "/boards"

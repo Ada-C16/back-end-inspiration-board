@@ -33,3 +33,13 @@ def valid_input(request_body, model):
     for input in required_input:
         if input not in request_body:
             abort(make_response({"details": f"Request body must include {input}."}, 400))
+
+def add_to_database(model_instance):
+    """Adds valid instance of a model to database"""
+    db.session.add(model_instance)
+    db.session.commit()
+
+def delete_from_database(model_instance):
+    """Deletes valid instance of a model from detabase"""
+    db.session.delete(model_instance)
+    db.session.commit()
