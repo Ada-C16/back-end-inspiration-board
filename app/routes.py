@@ -27,9 +27,7 @@ def get_cards_from_one_board(board_id):
     cards associated with this board or
     404 if it doesn't exist."""
     board = valid_id(Board, board_id)
-
     cards = board.cards
-
     cards_response = [card.to_dict() for card in cards]
 
     return jsonify(cards_response), 200
@@ -44,7 +42,9 @@ def get_cards_from_one_board(board_id):
 # 4. db.session.add(new_board)
 # 5. db.session.commit()
 # 4. return ....what to return here?? dict of new board? + 200 OK?
-
+board_bp.route("", methods = ["POST"])
+def create_new_board():
+    
 
 # ---7----
 # Route: "/boards"

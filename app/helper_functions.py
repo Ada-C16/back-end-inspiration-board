@@ -16,6 +16,20 @@ def valid_id(model, id):
     model = model.query.get(id)
 
     if not model: 
-        abort(make_response({"message": f"{model.model_string} {id} was not found"}, 404))
+        abort(make_response({"message": "not found"}, 404))
 
     return model
+
+def valid_input(request_body, model): 
+    """Input: JSON version of request and type of model.
+    Checks request body for required input per model.
+    Returns 400 with needed input if missing."""
+    if model == Board: 
+        required_input = ["title", "owner"]
+
+    if model == Card:
+        required_input = ["message", "board_id"]
+
+    for input in required_input:
+        if input not in request_body:
+            abort(make_response({"details": f"Request body must include {input}."}, 400))
