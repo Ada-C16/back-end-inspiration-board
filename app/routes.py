@@ -14,7 +14,7 @@ def post_one_card():
     # request_body will be the user's input, converted to json. it will be a new record
     # for the db, with all fields (a dict)
     request_body = request.get_json()
-    if 'message' not in request_body:
+    if request_body['message'].strip() == "" or 'message' not in request_body:
         return make_response({"details": "Request body must include message."}, 400)
     else:
         # taking info fr request_body and converting it to new Card object
@@ -46,7 +46,7 @@ def CRUD_one_card(card_id):
         return make_response({"message": f"Card {card_id} was not found"}, 404)
 
     # PATCH will change just one part of the record, not the whole record
-    
+
     if request.method == "PATCH":
         form_data = request.get_json()
         if "likes" in form_data:
@@ -69,9 +69,9 @@ def post_one_board():
     # request_body will be the user's input, converted to json. it will be a new record
     # for the db, with all fields (a dict)
     request_body = request.get_json()
-    if 'title' not in request_body:
+    if request_body['title'].strip() == "" or 'title' not in request_body:
         return make_response({"details": "Request body must include title."}, 400)
-    elif 'author' not in request_body:
+    elif request_body['author'].strip() == "" or 'author' not in request_body:
         return make_response({"details": "Request body must include author."}, 400)
     else:
         # taking info fr request_body and converting it to new Board object
