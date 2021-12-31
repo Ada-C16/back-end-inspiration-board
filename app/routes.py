@@ -7,7 +7,6 @@ from .helper_functions import *
 board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
-
 ####---------------------------------------------------####
 ####----------------- BOARD ENDPOINTS -----------------####
 ####---------------------------------------------------####
@@ -32,7 +31,7 @@ def get_cards_from_one_board(board_id):
 
     return jsonify(cards_response), 200
 
-board_bp.route("", methods = ["POST"])
+@board_bp.route("", methods = ["POST"])
 def create_new_board():
     """Adds new board to db and returns new board ID and 201 code or
     400 error if request body is missing title or owner."""
@@ -45,14 +44,14 @@ def create_new_board():
 
     add_to_database(new_board)
     
-    return {"new board id": new_board.board_id}, 201
+    return {"New board created with id": new_board.board_id}, 201
 
-board_bp.route("", methods = ["DELETE"])
+@board_bp.route("", methods = ["DELETE"])
 def delete_all_boards_but_default():
     """Deletes all boards and cards associated with boards from database, 
-    except for the default board."""
-    boards = Board.query.filter_by(Board.board_id != 1).all()
-
+    except for th@e default board."""
+    boards = Board.query.filter(Board.board_id!=1).all()
+    
     for board in boards: 
         if board.cards:
             for card in board.cards: 
