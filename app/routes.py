@@ -19,7 +19,7 @@ def post_one_card():
     else:
         # taking info fr request_body and converting it to new Card object
         new_card = Card(message=request_body["message"],
-                        increase_likes= 0,
+                        likes= 0,
                         board_id = request_body["board_id"])
         # committing changes to db
         db.session.add(new_card)
@@ -46,17 +46,13 @@ def CRUD_one_card(card_id):
         return make_response({"message": f"Card {card_id} was not found"}, 404)
 
     # PATCH will change just one part of the record, not the whole record
-    # not required but adding a patch for total_inventory on 11.9.21
-
-    # if request.method == "PATCH":
-    #     form_data = request.get_json()
-    # if "increase_likes" in form_data:
-    #     card.increase_likes = form_data["increase_likes"]
-    # db.session.commit()
-    # return make_response({"video": {"id": video.id,
-    #                 "title": video.title,
-    #                 "release_date": video.release_date,
-    #                 "total_inventory": video.total_inventory}}, 200)
+    
+    if request.method == "PATCH":
+        form_data = request.get_json()
+        if "likes" in form_data:
+            card.likes = form_data["likes"]
+            db.session.commit()
+            return make_response({}, 200)
 
     if request.method == "DELETE":
     # query db for specific card object by the card id
@@ -115,7 +111,7 @@ def CRUD_one_board(board_id):
         return make_response({'message': f"Board {board.id} was deleted"}, 200)
 
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
-def get_all_boards_for_one_board(board_id):
+def get_all_cards_for_one_board(board_id):
     # query Board table using board_id
     board_query = Board.query.get(board_id)
     # guard clause to check the board_id is valid
