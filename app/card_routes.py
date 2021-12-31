@@ -13,23 +13,33 @@ board_bp = Blueprint("board", __name__, url_prefix="/boards")
 # expected {"message": "loremipsum"} => error message or created card object
 @card_bp.route("", methods=["POST"]) 
 def create_card():
-    request_body_list = request.get_json()
-    request_body = request_body_list[0]
-    if not request_body or "message" not in request_body:
-        return jsonify({"details": "Request must include a message."}), 400
-    elif  len(request_body["message"]) < 1: 
-        return jsonify({"details": "Message can not be empty"}), 400
-    elif len(request_body["message"]) > 40: 
-        return jsonify({"details": "Message exceeds 40 characters limit"}), 400
-    else : 
-        new_card = Card(
-            message = request_body["message"],
-            likes_count = 0
-        )
-        db.session.add(new_card)
-        db.session.commit() 
-        response_body = build_a_card_response(new_card)
-        return jsonify(response_body), 201
+    try: 
+        request_body = request.get_json()[0]
+        message = request_body["message"]
+        board_id = request_body["board_id"]
+    
+        if not message: 
+            return {"details": "Message can not be empty"}, 400
+        elif len(message) > 40: 
+            return {"details": "Message exceeds 40 characters limit"}, 400
+        else : 
+            new_card = Card(
+                message = message,
+                likes_count = 0,
+                board_id = board_id
+            )
+            db.session.add(new_card)
+            db.session.commit() 
+            response_body = build_a_card_response(new_card)
+            return response_body, 201
+        
+    except KeyError as err:
+        if "message" in err.args:
+            return {"details": "Request must include a message."}, 400
+        
+        elif "board_id" in err.args:
+            return {"details": "Request must include a board_id."}, 400
+        
 
 #Create card in ralation to a board         
 @board_bp.route("/<board_id>/cards",methods=["POST"])
@@ -111,6 +121,27 @@ def delete_specific_card(card_id):
         db.session.commit()
         return jsonify({"details": f"Card {card_id} was successfully deleted"}), 200
     
+
+@card_bp.route("/allcards", methods=["DELETE"])
+def delete_all_cards():
+    all_cards = Card.query.all()
+    for card in all_cards:
+        db.session.delete(card)
+        db.session.commit()
+    return {"details": "all cards were successfully deleted"}, 200
+    
+
+#FE Action: None 
+#Testing card creation 
+# Will need to get cards in relations to a board for project 
+# expected:nothing => all card objects 
+@card_bp.route("", methods = ["GET"])
+def get_all_cards():
+        cards = Card.query.all()
+        response_body = build_cards_response(cards)
+        return jsonify(response_body),200
+
+
 ##Helpers 
 def build_a_card_response(card):
     response = {
@@ -129,21 +160,3 @@ def build_cards_response(cards):
         "likes-count": card.likes_count,
         })
     return response 
-
-#FE Action: None 
-#Testing card creation 
-# Will need to get cards in relations to a board for project 
-# expected:nothing => all card objects 
-@card_bp.route("", methods = ["GET"])
-def get_all_cards():
-        cards = Card.query.all()
-        response_body = build_cards_response(cards)
-        return jsonify(response_body),200
-
-#CARD MODEL 
-# class Card(db.Model):
-    # card_id = db.Column(db.Integer, primary_key=True)
-    # message = db.Column(db.String)
-    # likes_count = db.Column(db.Integer)
-    # board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
-    # board = db.relationship("Card", back_populates="cards")    
