@@ -71,6 +71,7 @@ def get_all_cards_specific_board(board_id):       # read all cards of a specific
                 "likes_count": card.likes_count,
                 "board_id": board.board_id
                 })
+        return jsonify(cards_board), 200
     except:
         return  {"details": f"Board {board_id} not found"}, 404
     
