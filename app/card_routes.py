@@ -6,13 +6,15 @@ from flask import Blueprint, request, jsonify
 import os 
 
 card_bp = Blueprint("card", __name__, url_prefix="/cards")
+board_bp = Blueprint("board", __name__, url_prefix="/boards")
 
 # FE ACTION: Submit button on card
 ## Create a card 
 # expected {"message": "loremipsum"} => error message or created card object
-@card_bp.route("", methods=["POST"])
+@card_bp.route("", methods=["POST"]) 
 def create_card():
-    request_body = request.get_json()
+    request_body_list = request.get_json()
+    request_body = request_body_list[0]
     if not request_body or "message" not in request_body:
         return jsonify({"details": "Request must include a message."}), 400
     elif  len(request_body["message"]) < 1: 
@@ -28,6 +30,38 @@ def create_card():
         db.session.commit() 
         response_body = build_a_card_response(new_card)
         return jsonify(response_body), 201
+
+#Create card in ralation to a board         
+@board_bp.route("/<board_id>/cards",methods=["POST"])
+def create_board_card(board_id):
+    board = Board.query.get(board_id)
+    request_body = request.get_json()
+    if not request_body or "message" not in request_body:
+        return jsonify({"details": "Request must include a message."}), 400
+    elif  len(request_body["message"]) < 1: 
+        return jsonify({"details": "Message can not be empty"}), 400
+    elif len(request_body["message"]) > 40: 
+        return jsonify({"details": "Message exceeds 40 characters limit"}), 400
+    else : 
+        new_card = Card(
+            message = request_body["message"],
+            likes_count = 0
+        )
+        db.session.add(new_card)
+        db.session.commit() 
+
+        # # get the card id of the new card
+    new_card_id = Card.query.get(new_card.card_id)
+        # # inserting new card to the board
+    board.cards.append(new_card_id)
+        # response_body = {
+        # “id”: new_card_id ,
+        # “message”: new_card.message,
+        # “likes_count”: new_card.likes_count,
+        # }
+        # return jsonify(response_body), 201
+    response_body = build_a_card_response(new_card)
+    return jsonify(response_body), 201
 
 #FE Action: Click a board title => all cards related to that board id (dont need)
 ## Reads a single card with current message and likes count
