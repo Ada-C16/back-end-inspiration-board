@@ -26,12 +26,15 @@ def test_create_card(client, one_board):
     response_body = response.get_json()
 
     assert response.status_code == 201
-    assert "successful post" in response_body
-    new_card = Card.query.first()
-    assert new_card
-    assert new_card.card_id == 1
-    assert new_card.message == "@donutdadd"
-    assert new_card.likes_count == 0
+    assert response_body["id"] == 1
+    assert response_body["likes_count"] == 0
+    assert response_body["message"] == "@donutdadd"
+    # assert "successful post" in response_body
+    # new_card = Card.query.first()
+    # assert new_card
+    # assert new_card.card_id == 1
+    # assert new_card.message == "@donutdadd"
+    # assert new_card.likes_count == 0
 
 def test_create_card_failed(client, one_board):
     response = client.post("/cards/1", json={})

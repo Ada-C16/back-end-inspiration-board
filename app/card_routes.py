@@ -31,7 +31,8 @@ def post_card(boardid):
     db.session.add(card)
     board.cards.append(card)
     db.session.commit()
-    return jsonify("successful post"), 201
+    card = Card.query.order_by(Card.card_id.desc()).first()
+    return jsonify({"id": card.card_id, "likes_count": card.likes_count, "message": card.message}), 201
 
 @cards_bp.route("/<id>/like", methods=["PUT"])
 def like_card(id):
