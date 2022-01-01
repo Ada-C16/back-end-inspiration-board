@@ -49,7 +49,7 @@ def create_new_board():
 @board_bp.route("", methods = ["DELETE"])
 def delete_all_boards_but_default():
     """Deletes all boards and cards associated with boards from database, 
-    except for th@e default board."""
+    except for the default board."""
     boards = Board.query.filter(Board.board_id!=1).all()
     
     for board in boards: 
@@ -59,47 +59,45 @@ def delete_all_boards_but_default():
 
         delete_from_database(board)
 
-    return {"All boards but one were deleted."}, 200
+    return {"All boards but one were deleted. Remaining board ID": 1}, 200
 
 ####---------------------------------------------------####
 ####------------------ CARD ENDPOINTS -----------------####
 ####---------------------------------------------------####
 @board_bp.route("/<board_id>/<card_id>", methods=["PUT"])
-def handle_card(board_id, card_id):
+def update_card(board_id, card_id):
+    """Input: Board ID and Card ID
+    Updates card in database and returns success message with card ID.
+    Returns 400 if invalid ID or 404 if card or board don't exist."""
     card = valid_id(Card, card_id)
     board = valid_id(Board, board_id)
     request_body = request.get_json()
     valid_input(request_body,Card)
 
     card.message = request_body["message"]
-    card.likes_count = request_body["likes_count"] # is this needed? or is it state?
-    
+    card.likes_count = request_body["likes_count"]
     db.session.commit()
     
-    return  {"Card successfully updated": card.card_id}, 200
+    return  {"Card successfully updated with ID": card.card_id}, 200
 
-# ---4----
-# Route: "/cards/<card_id>"
-# Method: DELETE
-# 1. Data check -> 
-#       - is it numeric? make_response({"message" : "Please enter a valid board id"}, 400)
-#       - does board_id exist? make_response({"message" : f"{entity} {id} was not found"}, 404)
-# 2. database query by card_id
-        # - Card.query(card_id)
-# 3. db.session.delete(card)
-# 4. db.session.commit()
-# 5. make_response("Successfully deleted card", 200)
 @board_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
 def delete_card(board_id, card_id):
+    """Input: Board ID and Card ID
+    Deletes card from database and returns success message.
+    Returns 400 if ID isn't valid or 404 if card or board don't exist.
+    """
     card = valid_id(Card, card_id)
     board = valid_id(Board, board_id)
 
     delete_from_database(card)
 
-    return {"Card successfully deleted. Card ID": card.card_id}, 200
+    return {"Card successfully deleted with ID": card.card_id}, 200
 
 @board_bp.route("/<board_id>/cards", methods = ["POST"])
 def create_new_card(board_id):
+    """Input: Board ID
+    Adds card to database and returns card ID with success message.
+    Returns 400 if invalid ID or 404 if board doesn't exist."""
     request_body = request.get_json()
     valid_id(Board, board_id)
     valid_input(request_body, Card)
@@ -110,6 +108,6 @@ def create_new_card(board_id):
 
     add_to_database(new_card)
     
-    return {"New card created with id": new_card.card_id}, 201
+    return {"New card created with ID": new_card.card_id}, 201
 
 
