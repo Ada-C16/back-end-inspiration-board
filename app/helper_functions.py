@@ -28,7 +28,7 @@ def valid_input(request_body, model):
         required_input = ["title", "owner"]
 
     if model == Card:
-        required_input = ["message", "board_id"]
+        required_input = ["message"]
 
     for input in required_input:
         if input not in request_body:

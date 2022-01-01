@@ -1,11 +1,11 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 from app import db
 from app.models.board import Board
 from app.models.card import Card
 from .helper_functions import *
 
 board_bp = Blueprint("boards", __name__, url_prefix="/boards")
-card_bp = Blueprint("cards", __name__, url_prefix="/cards")
+# card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 ####---------------------------------------------------####
 ####----------------- BOARD ENDPOINTS -----------------####
@@ -64,17 +64,19 @@ def delete_all_boards_but_default():
 ####---------------------------------------------------####
 ####------------------ CARD ENDPOINTS -----------------####
 ####---------------------------------------------------####
+@board_bp.route("/<board_id>/<card_id>", methods=["PUT"])
+def handle_card(board_id, card_id):
+    card = valid_id(Card, card_id)
+    board = valid_id(Board, board_id)
+    request_body = request.get_json()
+    valid_input(request_body,Card)
 
-# ---3----
-# Route: "/cards/<card_id>"
-# Method: PUT
-# 1. Data check -> 
-#       - is it numeric? make_response({"message" : "Please enter a valid board id"}, 400)
-#       - does card_id exist? make_response({"message" : f"{entity} {id} was not found"}, 404)
-# 2. database query by card_id
-        # - card=Card.query.get(card_id)
-        # - card.like_count +=1
-# 3. make_response("Successfully updated like count", 200)
+    card.message = request_body["message"]
+    card.likes_count = request_body["likes_count"] # is this needed? or is it state?
+    
+    db.session.commit()
+    
+    return  {"Card successfully updated": card.card_id}, 200
 
 # ---4----
 # Route: "/cards/<card_id>"
@@ -88,16 +90,18 @@ def delete_all_boards_but_default():
 # 4. db.session.commit()
 # 5. make_response("Successfully deleted card", 200)
 
-# ---5----
-# Route: "/cards/<card_id>"
-# Method: POST
-# 1. request_body = request.get_json()
-# 2. check request data - make sure message is present
-# 3. create new card 
-        # - new_card = Card(message=request_body["message"])
-# 4. db.session.add(new_card)
-# 5. db.session.commit()
-# 4. return ....what to return here?? dict of new card? + 200 OK?
+@board_bp.route("/<board_id>/cards", methods = ["POST"])
+def create_new_card(board_id):
+    request_body = request.get_json()
+    valid_id(Board, board_id)
+    valid_input(request_body, Card)
 
+    new_card = Card(message = request_body["message"],
+                    likes_count = 0,
+                    board_id = board_id)
+
+    add_to_database(new_card)
+    
+    return {"New card created with id": new_card.card_id}, 201
 
 
