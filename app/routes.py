@@ -89,6 +89,14 @@ def handle_card(board_id, card_id):
 # 3. db.session.delete(card)
 # 4. db.session.commit()
 # 5. make_response("Successfully deleted card", 200)
+@board_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
+def delete_card(board_id, card_id):
+    card = valid_id(Card, card_id)
+    board = valid_id(Board, board_id)
+
+    delete_from_database(card)
+
+    return {"Card successfully deleted. Card ID": card.card_id}, 200
 
 @board_bp.route("/<board_id>/cards", methods = ["POST"])
 def create_new_card(board_id):
