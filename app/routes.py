@@ -11,30 +11,30 @@ from app.models.board import Board
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 @cards_bp.route("", methods=["POST"])
 def post_one_card():
-    # request_body will be the user's input, converted to json. it will be a new record 
+    # request_body will be the user's input, converted to json. it will be a new record
     # for the db, with all fields (a dict)
     request_body = request.get_json()
-    if 'message' not in request_body:
+    if request_body['message'].strip() == "" or 'message' not in request_body:
         return make_response({"details": "Request body must include message."}, 400)
     else:
-        # taking info fr request_body and converting it to new Card object    
+        # taking info fr request_body and converting it to new Card object
         new_card = Card(message=request_body["message"],
                         likes= 0,
                         board_id = request_body["board_id"])
         # committing changes to db
         db.session.add(new_card)
         db.session.commit()
-        return(new_card.convert_to_dict()), 201 
-                        
+        return(new_card.convert_to_dict()), 201
+
 # this end point is returning a list of all Card objects (from the db) that have been jsonified
 @cards_bp.route("", methods=["GET"])
 def get_all_cards():
-    # querying db for all cards then storing that list of objects in local cards variable    
+    # querying db for all cards then storing that list of objects in local cards variable
     cards = Card.query.all()
     cards_response = []
     # looping through each card, converting to requested format (dict) and adding to
     # card_response which will be list of dicts
-    for card in cards:    
+    for card in cards:
         cards_response.append(card.convert_to_dict())
     return jsonify(cards_response), 200
 
@@ -46,7 +46,7 @@ def CRUD_one_card(card_id):
         return make_response({"message": f"Card {card_id} was not found"}, 404)
 
     # PATCH will change just one part of the record, not the whole record
-    
+
     if request.method == "PATCH":
         form_data = request.get_json()
         if "likes" in form_data:
@@ -66,32 +66,32 @@ def CRUD_one_card(card_id):
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 @boards_bp.route("", methods=["POST"])
 def post_one_board():
-    # request_body will be the user's input, converted to json. it will be a new record 
+    # request_body will be the user's input, converted to json. it will be a new record
     # for the db, with all fields (a dict)
     request_body = request.get_json()
-    if 'title' not in request_body:
+    if request_body['title'].strip() == "" or 'title' not in request_body:
         return make_response({"details": "Request body must include title."}, 400)
-    elif 'author' not in request_body:
+    elif request_body['author'].strip() == "" or 'author' not in request_body:
         return make_response({"details": "Request body must include author."}, 400)
     else:
-        # taking info fr request_body and converting it to new Board object    
+        # taking info fr request_body and converting it to new Board object
         new_board = Board(title=request_body["title"],
                         author= request_body["author"])
         # committing changes to db
         db.session.add(new_board)
         db.session.commit()
-        return(new_board.convert_board_to_dict()), 201 
+        return(new_board.convert_board_to_dict()), 201
 
 # this end point is returning a list of all Board objects (from the db) that have been jsonified
 @boards_bp.route("", methods=["GET"])
 def get_all_boards():
-    # querying db for all boards and ordering them by title, then storing that list of 
-    # objects in local boards variable    
+    # querying db for all boards and ordering them by title, then storing that list of
+    # objects in local boards variable
     boards = Board.query.order_by(Board.title).all()
     boards_response = []
     # looping through each boaard, converting to requested format (dict) and adding to
     # board_response which will be list of dicts
-    for board in boards:    
+    for board in boards:
         boards_response.append(board.convert_board_to_dict())
     return jsonify(boards_response), 200
 
@@ -100,9 +100,9 @@ def CRUD_one_board(board_id):
     board = Board.query.get(board_id) #either get Board back fr db or None, board here is an object
     if board is None:
         return make_response({"message": f"Board {board_id} was not found"}, 404)
-    if request.method == "GET":  
-        return board.convert_board_to_dict()  
-    
+    if request.method == "GET":
+        return board.convert_board_to_dict()
+
     if request.method == "DELETE":
     # query db for specific board object by the board id
         #if Board.query.filter_by(id=board_id):

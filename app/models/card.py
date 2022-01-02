@@ -14,4 +14,4 @@ class Card(db.Model):
         return { "id": self.id,
                 "message": self.message,
                 "likes": self.likes}
-                                    
+
