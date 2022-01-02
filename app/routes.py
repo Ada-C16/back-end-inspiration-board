@@ -84,7 +84,7 @@ def post_board():
         db.session.add(new_board)
         db.session.commit()
 
-        return jsonify(new_board.to_()), 201
+        return jsonify(new_board.to_dict()), 201
     except:
         response = {
             "details" : "Invalid request body"
@@ -104,6 +104,22 @@ def get_board(board_id):
         return jsonify({'message' : f'Card {board_id} was not found'}), 404
 
     return jsonify(board.board_dict()), 200
+
+#read (1) - GET CARDS
+@boards_bp.route("/<id>/cards", methods=["GET"])
+def read_cards_from_board(id):
+    board = Board.query.get(id)
+
+    if board is None:
+        return jsonify(None), 404
+
+    cards_response = [card.to_dict() for card in board.cards]
+
+    response = board.to_dict()
+    response["cards"] = cards_response
+
+    return jsonify(response)
+
 #delete (1) - DELETE
 # @boards_bp.route("/<board_id>", methods=["DELETE"])
 # def delete_board(board_id):
