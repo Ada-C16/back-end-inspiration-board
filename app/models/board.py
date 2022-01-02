@@ -14,3 +14,12 @@ class Board(db.Model):
         }
 
         return board
+
+    @classmethod
+    def from_dict(cls, request_body):
+        board = Board(
+            title=request_body["title"],
+            owner=request_body["owner"]
+        )
+
+        return board

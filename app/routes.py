@@ -86,7 +86,7 @@ def post_board():
         db.session.add(new_board)
         db.session.commit()
 
-        return jsonify(new_board.to_()), 201
+        return jsonify(new_board.to_dict()), 201
     except:
         response = {
             "details" : "Invalid request body"
