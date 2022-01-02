@@ -63,8 +63,6 @@ def delete_card(card_id):
         'details': f'Card {card.card_id} succesfully deleted'
     }), 200
 
-
-
 #BOARDS
 
 #read - GET
@@ -107,16 +105,16 @@ def get_board(board_id):
 
     return jsonify(board.board_dict()), 200
 #delete (1) - DELETE
-@boards_bp.route("/<board_id>", methods=["DELETE"])
-def delete_board(board_id):
-    board = Board.query.get(board_id)
+# @boards_bp.route("/<board_id>", methods=["DELETE"])
+# def delete_board(board_id):
+#     board = Board.query.get(board_id)
 
-    if not board:
-        return jsonify({'message' : f'Board {board_id} was not found'}), 404
+#     if not board:
+#         return jsonify({'message' : f'Board {board_id} was not found'}), 404
     
-    db.session.delete(board)
-    db.session.commit()
-    return jsonify({
-        'id': board.board_id,
-        'details': f'Board {board.board_id} succesfully deleted'
-    }), 200
+#     db.session.delete(board)
+#     db.session.commit()
+#     return jsonify({
+#         'id': board.board_id,
+#         'details': f'Board {board.board_id} succesfully deleted'
+#     }), 200
