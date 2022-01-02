@@ -41,11 +41,11 @@ def test_get_card(client, one_card):
         }
     ]
 
-def test_card_not_found(client, one_card):
+def test_card_not_found(client):
     # Act
     response = client.get("/cards/1")
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 404
-    assert response_body == None
+    assert response_body == {'message': 'Card 1 was not found'}

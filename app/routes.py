@@ -34,7 +34,7 @@ def create_card():
             "details" : "Invalid request body"
         }
 
-        return jsonify(response), 400
+        return jsonify([response]), 400
 
 #read - GET (1)
 @cards_bp.route("/<card_id>", methods=["GET"])
@@ -47,7 +47,7 @@ def get_card(card_id):
     if not card:
         return jsonify({'message' : f'Card {card_id} was not found'}), 404
 
-    return jsonify(card.to_dict()), 200
+    return jsonify([card.to_dict()]), 200
 #delete - DELETE
 @cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
