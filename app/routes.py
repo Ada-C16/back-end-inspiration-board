@@ -1,7 +1,11 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, json, request, jsonify, make_response
 from app import db
 from app.models.card import Card
 from app.models.board import Board
+import requests
+import os
+
+slack_path = "https://slack.com/api/chat.postMessage"
 
 # example_bp = Blueprint('example_bp', __name__)
 
@@ -24,7 +28,15 @@ def post_one_card():
         # committing changes to db
         db.session.add(new_card)
         db.session.commit()
+        try:
+            query_params = {"channel": "pacific-pals",
+            "text": f"Someone just posted a new card, {new_card.message}"}
+            header_param = {"Authorization": "Bearer "+ os.environ.get("slack_oauth_token")}
+            slack_post_body = requests.post(slack_path, json=query_params, headers= header_param)
+        except TypeError:
+            pass
         return(new_card.convert_to_dict()), 201
+
 
 # this end point is returning a list of all Card objects (from the db) that have been jsonified
 @cards_bp.route("", methods=["GET"])
