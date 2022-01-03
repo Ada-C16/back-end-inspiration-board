@@ -137,4 +137,5 @@ def like_card(card_id):
     card.likes_count += 1
     db.session.commit()
 
-    return {"details": f"You've added a like to card {card_id}"}
+    return {"card_id": card.card_id,
+    "new_like_count": card.likes_count}
