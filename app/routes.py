@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
+from app.models import Board, Card
 
 # example_bp = Blueprint('example_bp', __name__)
 
@@ -9,8 +10,8 @@ def validate_board(request_body):
     if "title" not in request_body or "owner" not in request_body:
         return jsonify({"details": "Request body must include title and author"}), 400
 
+# Get all Boards
 @board_bp.route("", methods=["GET"])
-
 def get_all_boards():
     board = Board.query.all()
     board_list = []
