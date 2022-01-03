@@ -4,14 +4,6 @@ from app.models.card import Card
 
 bp = Blueprint("cards", __name__, url_prefix="/cards")
 
-# GET /boards
-
-# POST /boards
-
-# GET /boards/<board_id>/cards
-
-# POST /boards/<board_id>/cards
-
 #DELETE
 @bp.route("/<card_id>", methods = ["DELETE"])
 def delete_card(card_id):
