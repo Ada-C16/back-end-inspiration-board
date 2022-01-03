@@ -13,3 +13,5 @@ class Board(db.Model):
             'title': self.title,
             'owner': self.owner
         }
+
+    
