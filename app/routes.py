@@ -4,7 +4,7 @@ from app.models.board import Board
 from app.models.card import Card
 from .helper_functions import *
 
-board_bp = Blueprint("boards", __name__, url_prefix="boards")
+board_bp = Blueprint("boards", __name__, url_prefix="/boards")
 # card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 ####---------------------------------------------------####
