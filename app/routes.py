@@ -12,4 +12,4 @@ def create_new_board():
         name = request_body["name"]
     )
 
-    db_add(new_board)
+    db.add(new_board)
