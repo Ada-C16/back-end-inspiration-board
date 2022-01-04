@@ -37,11 +37,26 @@ def get_boards():
 # GET /boards/<board_id> Gets data for specific board.
 # POST /boards/<board_id> Creates a new card to a specific board
 # returns a dictionary of the board's data.
-@boards_bp.route("/<board_id>", methods=["GET", "POST"])
+@boards_bp.route("/<board_id>", methods=["GET"])
 @require_valid_id
 def one_board(board):
+    return board.board_details(), 200
+
+
+# GET /boards/<board_id>/cards Gets all cards assigned to a specific board.
+# returns a dictionary of cards data for the board.
+@boards_bp.route("/<board_id>/cards", methods=["GET","POST"])
+@require_valid_id
+def cards_of_one_board(board):
     if request.method == "GET":
-        return board.board_details(), 200
+        boards_cards = Card.query.filter(Card.board_id==board.board_id)
+
+        all_cards = []
+
+        for card in boards_cards:
+            all_cards.append(card.card_details()) # May need to break this up into two separate steps. Wanted to see if this implementation worked.
+
+        return jsonify(all_cards), 200
 
     elif request.method == "POST":
         request_body = request.get_json()
@@ -57,21 +72,5 @@ def one_board(board):
         db.session.commit()
 
         return new_card.card_details(), 200
-
-# GET /boards/<board_id>/cards Gets all cards assigned to a specific board.
-# returns a dictionary of cards data for the board.
-@boards_bp.route("/<board_id>/cards", methods=["GET"])
-@require_valid_id
-def cards_of_one_board(board):
-
-    boards_cards = Card.query.filter(Card.board_id==board.board_id)
-
-    all_cards = []
-
-    for card in boards_cards:
-        all_cards.append(card.card_details()) # May need to break this up into two separate steps. Wanted to see if this implementation worked.
-
-    return jsonify(all_cards), 200
-
 
 # Enhancement ideas - DELETE, PUT/PATCH board info
