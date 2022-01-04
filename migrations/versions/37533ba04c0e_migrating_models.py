@@ -1,8 +1,8 @@
-"""update to board model to include functions
+"""migrating models
 
-Revision ID: 7cae36d153db
-Revises: 44dd356c7192
-Create Date: 2021-12-21 19:29:59.975594
+Revision ID: 37533ba04c0e
+Revises: 
+Create Date: 2021-12-23 18:31:03.148261
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7cae36d153db'
-down_revision = '44dd356c7192'
+revision = '37533ba04c0e'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -28,6 +28,8 @@ def upgrade():
     sa.Column('card_id', sa.Integer(), nullable=False),
     sa.Column('message', sa.String(), nullable=True),
     sa.Column('likes_count', sa.Integer(), nullable=True),
+    sa.Column('board_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['board_id'], ['board.board_id'], ),
     sa.PrimaryKeyConstraint('card_id')
     )
     # ### end Alembic commands ###
