@@ -6,3 +6,10 @@ class Board(db.Model):
     owner = db.Column(db.String, nullable=False)
     card = db.relationship("Card", back_populates="board", lazy=True)
 
+    def to_dict(self):
+        return {
+            "id": self.board_id,
+            "title": self.title,
+            "owner": self.owner
+        }
+
