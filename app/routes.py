@@ -2,6 +2,8 @@ from flask import Blueprint, json, request, jsonify, make_response
 from app import db
 from app.models.board import Board
 from app.models.card import Card
+from datetime import datetime, timezone
+
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
@@ -11,6 +13,7 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 # PUT /cards/card_id
 # OPTIONAL: DELETE /boards/<board_id>
 # OPTIONAL: PUT /boards/<board_id>
+# OPTIONAL: PUT (undo) (we could double up logic)
 
 @boards_bp.route("", methods=["POST"])
 def create_board():
@@ -67,14 +70,46 @@ def create_card(board_id):
 
 
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
-def read_all_cards_for_board(board_id):
+def read_all_cards(board_id):
     board = Board.query.get_or_404(board_id)
     resp = []
     for card in board.cards:
-        if not card.deleted:
+        if not card.deleted_at:
             resp.append({
                 "card_id": card.card_id,
                 "message": card.message,
                 "likes_count": card.likes_count
             })
     return jsonify(resp), 200
+
+
+@cards_bp.route("/<card_id>", methods=["DELETE"])
+def delete_card(card_id):
+    card = Card.query.get_or_404(card_id)
+
+    card.deleted_at = datetime.now(timezone.utc)
+
+    db.session.commit()
+
+    return 204
+    
+    
+
+
+
+# TODO: consider a patch request with an endpoint like /<card_id>/like to update likes instead
+@cards_bp.route("/<card_id>", methods=["PUT"])
+def update_card(card_id):
+    card = Card.query.get_or_404(card_id)
+    req = request.get_json()
+    card.likes_count = req["likes_count"]
+    # TODO THIS ROUTE
+
+    db.session.commit()
+    resp = {
+        "messages": card.messages,
+        "likes_count": card.likes_count
+    }
+
+    return jsonify(resp), 200
+    
