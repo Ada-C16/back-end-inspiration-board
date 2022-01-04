@@ -65,7 +65,7 @@ def delete_all_boards_but_default():
 ####------------------ CARD ENDPOINTS -----------------####
 ####---------------------------------------------------####
 @board_bp.route("/<board_id>/<card_id>", methods=["PUT"])
-def update_card(board_id, card_id):
+def update_card_likes(board_id, card_id):
     """Input: Board ID and Card ID
     Updates card in database and returns success message with card ID.
     Returns 400 if invalid ID or 404 if card or board don't exist."""
@@ -74,11 +74,10 @@ def update_card(board_id, card_id):
     request_body = request.get_json()
     valid_input(request_body,Card)
 
-    card.message = request_body["message"]
-    card.likes_count = request_body["likes_count"]
+    card.likes_count = request_body["likes_count"] + 1
     db.session.commit()
     
-    return {"id": card.card_id}, 200
+    return {"likes_count": card.likes_count}, 200
 
 @board_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
 def delete_card(board_id, card_id):
