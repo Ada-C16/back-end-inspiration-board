@@ -23,3 +23,15 @@ def create_board():
 
     return make_response(new_board.to_dict(),200)
 
+@board_bp.route("", methods=["GET"])  # TODO: DO WE WANT THIS SORTED? 
+def get_all_boards():
+    boards = Board.query.all()
+
+    board_response = []
+    for board in boards:
+        board_response.append(
+            board.to_dict()
+        )
+    
+    return make_response(jsonify(board_response), 200)
+
