@@ -51,14 +51,15 @@ def test_card_not_found(client):
     assert response_body == {'message': 'Card 1 was not found'}
 
 def test_delete_card(client, one_card):
-    # Act
+    #Act
     response = client.delete("/cards/1")
     response_body = response.get_json()
 
     # Assert
     assert response.status_code == 200
     assert response_body == {
-        'details': f'Card 1 succesfully deleted'
+        'id': 1, 
+        'details': 'Card 1 succesfully deleted'
     }
     assert Card.query.get(1) == None
 
@@ -84,6 +85,7 @@ def test_create_card(client):
     # Assert
     assert response.status_code == 201
     assert response_body == {
+        "id" : 1,
         "message": "Test message",
         "likes_count": 8
     }
@@ -91,7 +93,6 @@ def test_create_card(client):
     assert new_card 
     assert new_card.message == "Test message"
     assert new_card.likes_count == 8
-   
 
 def test_create_card_must_contain_message(client):
     # Act
@@ -102,10 +103,10 @@ def test_create_card_must_contain_message(client):
 
     # Assert
     assert response.status_code == 400
-    assert "details" in response_body
-    assert response_body == {
+    # assert "details" in response_body
+    assert response_body == [{
         "details" : "Invalid request body"
-    }
+    }]
     assert Card.query.all() == []
 
 def test_create_card_must_contain_likes_count(client):
@@ -117,9 +118,9 @@ def test_create_card_must_contain_likes_count(client):
 
     # Assert
     assert response.status_code == 400
-    assert "details" in response_body
-    assert response_body == {
+    # assert "details" in response_body
+    assert response_body == [{
         "details" : "Invalid request body"
-    }
+    }]
     assert Card.query.all() == []
 
