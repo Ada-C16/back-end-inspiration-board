@@ -84,7 +84,9 @@ def create_card(board_ID):
     db.session.add(new_card)
     db.session.commit()
 
-    return jsonify({"message": new_card.message,"board_id": new_card.board_id}), 201
+    return jsonify({"message": new_card.message,
+                    "board_id": new_card.board_id, 
+                    "likes_count":new_card.likes_count}), 201
 
 #GET ALL CARDS FOR SPECIFIC BOARD BY ID
 @boards_bp.route("/<board_ID>/cards", methods=["GET"])
