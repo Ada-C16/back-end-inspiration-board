@@ -32,5 +32,13 @@ def handle_boards():
                 "owner": new_board.owner
             }), 201)
 
-
-
+# Some notes about routes
+#   - POST /boards/board_id/cards
+#     - Create new card for a specific board
+#       - request body includes:
+#         - message
+#   - GET /boards/board_id/cards (repeated from above)
+#     - Return a list of cards [ { card_id: card_id, message: message, likes_count: likes_count }]
+#   - DELETE /cards/card_id
+#     - Delete the selected card
+#   - PATCH /cards/card_id
