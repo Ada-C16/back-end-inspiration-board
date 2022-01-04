@@ -12,8 +12,9 @@ class Board(db.Model):
         for sticky in self.cards:
             stickies.append({
                 "id": sticky.id,
-                "value": sticky.value,
-                "num_likes": sticky.num_likes
+                "text": sticky.value,
+                "num_likes": sticky.num_likes,
+                "date": sticky.date
             })
 
         return stickies
