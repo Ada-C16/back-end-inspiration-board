@@ -34,7 +34,7 @@ def get_board_names():
             "name":board.name,
             "id":board.id
         })
-    return make_response(jsonify(response), 200)
+    return make_response(jsonify({"boards": response}), 200)
 
 # Posts a new sticky to an existing board
 @board_bp.route("/<board_id>", methods=["POST"], strict_slashes=False)
