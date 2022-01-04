@@ -7,6 +7,7 @@ import requests
 from dotenv import load_dotenv
 load_dotenv()
 from functools import wraps
+import os
 
 boards_bp=Blueprint("board", __name__, url_prefix="/board")
 
@@ -81,6 +82,12 @@ def create_card(board_ID):
         likes_count = 0,
         board_id = board_ID
     )
+    url= 'https://slack.com/api/chat.postMessage'
+    header_values = {'AUTHORIZATION': os.environ.get("AUTHORIZATION")}
+    slack_values = {"text" : f"Something inspirational posted on board {new_card.board_id}",
+                    "channel" : "winspo-board"
+    }
+    requests.post(url, headers=header_values, params=slack_values)
     db.session.add(new_card)
     db.session.commit()
 
