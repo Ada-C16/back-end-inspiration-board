@@ -7,7 +7,38 @@ class Board(db.Model):
     owner = db.Column(db.String)
     cards = db.relationship("Card", backref="card", lazy=True)
 
-    # to_dict
-    # from_dict
+    def to_dict(self):
+        return {
+            "title": self.title,
+            "owner": self.owner,
+            "board_id": self.board_id
+        }
+
+
+    @classmethod
+    def from_dict(cls, req):
+        is_invalid_req = cls.check_invalid_req(req)
+        if is_invalid_req:
+            return is_invalid_req
+        else:
+            board = cls(
+                title=req["title"],
+                owner=req["owner"]
+            )
+            return board
+
+    @staticmethod
+    def check_invalid_req(req):
+        if "title" not in req:
+            return {
+                "error": "Request body must contain title"
+            }
+        if "owner" not in req:
+            return {
+                "error": "Request body must contain owner"
+            }
+        return False
+
+    
     # get_cards
     # checking id/getting board

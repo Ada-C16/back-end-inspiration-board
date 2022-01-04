@@ -15,39 +15,23 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 
 
-# TODO errorhandling -> handle cases where req keys are invalid
-# TODO encapsulation -> new board from dict classmethod, board.to_dict instance method
 @boards_bp.route("", methods=["POST"])
 def create_board():
     req = request.get_json()
-    new_board = Board(
-        title=req["title"],
-        owner=req["owner"]
-    )
-    db.session.add(new_board)
-    db.session.commit()
-    resp = {
-        "title": new_board.title,
-        "owner": new_board.owner,
-        "board_id": new_board.board_id
-    }
-    return jsonify(resp), 201
+    resp = Board.from_dict(req)
+    if isinstance(resp, dict):
+        code = 400
+    else:
+        code = 201
+        db.session.add(resp)
+        db.session.commit()
+        resp = resp.to_dict()
+    return jsonify(resp), code
 
-# TODO errorhandling ->  n/a
-# TODO encapsulation -> use to_dict method to refactor
 @boards_bp.route("", methods=["GET"])
 def read_all_boards():
     boards = Board.query.all()
-    
-    resp = []
-
-    for board in boards:
-        resp.append({
-            "title": board.title,
-            "owner": board.owner,
-            "board_id": board.board_id
-        })
-
+    resp = [board.to_dict() for board in boards]
     return jsonify(resp), 200
 
 # TODO errorhandling ->  invalid keys in req body, invalid id for board
