@@ -26,7 +26,7 @@ def test_get_cards_one_saved_cards(client, one_card):
         }
     ]
 
-def test_get_card(client, one_card):
+def test_get_a_card(client, one_card):
     # Act
     response = client.get("/cards/1")
     response_body = response.get_json()
