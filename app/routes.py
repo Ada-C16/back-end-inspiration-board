@@ -33,7 +33,6 @@ def create_board():
     }
     return jsonify(resp), 201
 
-
 # TODO errorhandling ->  n/a
 # TODO encapsulation -> use to_dict method to refactor
 @boards_bp.route("", methods=["GET"])

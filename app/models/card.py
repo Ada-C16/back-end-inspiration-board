@@ -8,3 +8,9 @@ class Card(db.Model):
     board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
     deleted = db.Column(db.Boolean, default=False)
     deleted_at = db.Column(db.DateTime, nullable=True, default=None)
+
+    # to_dict
+    # from_dict
+    # liking
+    # checking card_id
+    # delete card

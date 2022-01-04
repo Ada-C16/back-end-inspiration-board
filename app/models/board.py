@@ -6,3 +6,8 @@ class Board(db.Model):
     title = db.Column(db.String)
     owner = db.Column(db.String)
     cards = db.relationship("Card", backref="card", lazy=True)
+
+    # to_dict
+    # from_dict
+    # get_cards
+    # checking id/getting board
