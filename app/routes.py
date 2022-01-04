@@ -91,25 +91,21 @@ def delete_card(card_id):
 
     db.session.commit()
 
-    return 204
+    return jsonify(''), 204
     
     
 
-
-
-# TODO: consider a patch request with an endpoint like /<card_id>/like to update likes instead
-@cards_bp.route("/<card_id>", methods=["PUT"])
+@cards_bp.route("/<card_id>/like", methods=["PUT"])
 def update_card(card_id):
     card = Card.query.get_or_404(card_id)
-    req = request.get_json()
-    card.likes_count = req["likes_count"]
-    # TODO THIS ROUTE
+    if not card.deleted_at:
+        card.likes_count += 1 
 
-    db.session.commit()
-    resp = {
-        "messages": card.messages,
-        "likes_count": card.likes_count
-    }
+        db.session.commit()
+        resp = {
+            "message": card.message,
+            "likes_count": card.likes_count
+        }
 
-    return jsonify(resp), 200
+        return jsonify(resp), 200
     
