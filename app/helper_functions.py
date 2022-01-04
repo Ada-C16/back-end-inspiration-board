@@ -40,6 +40,6 @@ def add_to_database(model_instance):
     db.session.commit()
 
 def delete_from_database(model_instance):
-    """Deletes valid instance of a model from detabase"""
+    """Deletes valid instance of a model from database"""
     db.session.delete(model_instance)
     db.session.commit()

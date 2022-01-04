@@ -44,7 +44,7 @@ def create_new_board():
 
     add_to_database(new_board)
     
-    return {"New board created with id": new_board.board_id}, 201
+    return {"id": new_board.board_id}, 201
 
 @board_bp.route("", methods = ["DELETE"])
 def delete_all_boards_but_default():
@@ -78,7 +78,7 @@ def update_card(board_id, card_id):
     card.likes_count = request_body["likes_count"]
     db.session.commit()
     
-    return  {"Card successfully updated with ID": card.card_id}, 200
+    return {"id": card.card_id}, 200
 
 @board_bp.route("/<board_id>/<card_id>", methods=["DELETE"])
 def delete_card(board_id, card_id):
@@ -91,7 +91,7 @@ def delete_card(board_id, card_id):
 
     delete_from_database(card)
 
-    return {"Card successfully deleted with ID": card.card_id}, 200
+    return {"id": card.card_id}, 200
 
 @board_bp.route("/<board_id>/cards", methods = ["POST"])
 def create_new_card(board_id):
@@ -108,6 +108,6 @@ def create_new_card(board_id):
 
     add_to_database(new_card)
     
-    return {"New card created with ID": new_card.card_id}, 201
+    return {"id": new_card.card_id}, 201
 
 
