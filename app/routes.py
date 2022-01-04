@@ -9,12 +9,14 @@ boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 # TODO routes/methods:
-# DELETE /cards/<card_id>
-# PUT /cards/card_id
 # OPTIONAL: DELETE /boards/<board_id>
 # OPTIONAL: PUT /boards/<board_id>
 # OPTIONAL: PUT (undo) (we could double up logic)
 
+
+
+# TODO errorhandling -> handle cases where req keys are invalid
+# TODO encapsulation -> new board from dict classmethod, board.to_dict instance method
 @boards_bp.route("", methods=["POST"])
 def create_board():
     req = request.get_json()
@@ -32,6 +34,8 @@ def create_board():
     return jsonify(resp), 201
 
 
+# TODO errorhandling ->  n/a
+# TODO encapsulation -> use to_dict method to refactor
 @boards_bp.route("", methods=["GET"])
 def read_all_boards():
     boards = Board.query.all()
@@ -47,6 +51,8 @@ def read_all_boards():
 
     return jsonify(resp), 200
 
+# TODO errorhandling ->  invalid keys in req body, invalid id for board
+# TODO encapsulation -> from_json classmethod for card, to_dict instance method
 @boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card(board_id):
     # optional enhancement: send slack message whenever a card is created
@@ -69,6 +75,8 @@ def create_card(board_id):
     return jsonify(resp), 201
 
 
+# TODO errorhandling -> invalid board id
+# TODO encapsulation -> board method using a list comprehension for getting all cards, that list comprehension will use card's to_dict method
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
 def read_all_cards(board_id):
     board = Board.query.get_or_404(board_id)
@@ -83,6 +91,8 @@ def read_all_cards(board_id):
     return jsonify(resp), 200
 
 
+# TODO errorhandling -> invalid card id (either already deleted or nonexistent)
+# TODO encapsulation -> card method to delete
 @cards_bp.route("/<card_id>", methods=["DELETE"])
 def delete_card(card_id):
     card = Card.query.get_or_404(card_id)
@@ -95,6 +105,8 @@ def delete_card(card_id):
     
     
 
+# TODO errorhandling -> invalid card_id (deleted or nonexistent) 
+# TODO encapsulation -> card.like() method and use to_dict for resp
 @cards_bp.route("/<card_id>/like", methods=["PUT"])
 def update_card(card_id):
     card = Card.query.get_or_404(card_id)
@@ -103,6 +115,7 @@ def update_card(card_id):
 
         db.session.commit()
         resp = {
+            "card_id": card.card_id,
             "message": card.message,
             "likes_count": card.likes_count
         }
