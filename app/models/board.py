@@ -14,6 +14,7 @@ def to_dict(self):
         "title": self.title,
         "owner_name": self.owner,
         "cards": self.cards,
+        "id": self.id
     }
 
 def read_cards(self):
