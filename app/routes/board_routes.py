@@ -40,7 +40,6 @@ def get_all_boards():
 
 @board_bp.route("/<board_id>/cards", methods=["GET"])
 def get_cards_by_board_id(board_id):
-    card = get_id(board_id, Card, str_repr="Card")
-
-    return make_response(jsonify(card.to_dict_with_rentals()), 200)
+    board = get_id(board_id, Board, str_repr="Board")
+    return make_response(jsonify(board.to_dict_with_cards()), 200)
 

@@ -15,11 +15,11 @@ class Board(db.Model):
 
     def to_dict_with_cards(self):
         result = []
-        for card in self.cards:
+        for cards in self.card:
             result.append({
-                "id": self.id, 
+                "id": cards.id, 
                 "board_id": self.board_id,
-                "message": self.message,
-                "like_count": self.like_count
+                "message": cards.message,
+                "like_count": cards.like_count
                 }        
             )
