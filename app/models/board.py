@@ -5,7 +5,7 @@ class Board(db.Model):
     board_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     owner = db.Column(db.String(255))
-    cards = db.relationship('Card', backref='board')
+    cards = db.relationship('Card', backref='card')
 
     def to_dict(self):
         return {
