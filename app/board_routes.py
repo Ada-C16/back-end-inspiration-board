@@ -93,7 +93,7 @@ def create_card(board_ID):
 
     return jsonify({"message": new_card.message,
                     "board_id": new_card.board_id, 
-                    "likes_count":new_card.likes_count
+                    "likes_count":new_card.likes_count,
                     "card_id":new_card.card_id}), 201
 
 #GET ALL CARDS FOR SPECIFIC BOARD BY ID
