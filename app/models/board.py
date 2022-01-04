@@ -13,3 +13,13 @@ class Board(db.Model):
             "owner": self.owner
         }
 
+    def to_dict_with_cards(self):
+        result = []
+        for card in self.cards:
+            result.append({
+                "id": self.id, 
+                "board_id": self.board_id,
+                "message": self.message,
+                "like_count": self.like_count
+                }        
+            )
