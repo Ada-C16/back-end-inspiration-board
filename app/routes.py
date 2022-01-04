@@ -71,10 +71,10 @@ def update_card_likes(board_id, card_id):
     Returns 400 if invalid ID or 404 if card or board don't exist."""
     card = valid_id(Card, card_id)
     board = valid_id(Board, board_id)
-    request_body = request.get_json()
-    valid_input(request_body,Card)
+    # request_body = request.get_json()
+    # valid_input(request_body,Card)
 
-    card.likes_count = request_body["likes_count"] + 1
+    card.likes_count += 1
     db.session.commit()
     
     return {"likes_count": card.likes_count}, 200
