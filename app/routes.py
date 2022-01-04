@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.board import Board
+from app.models.card import Card
 
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint('board_bp', __name__, url_prefix="/boards")
@@ -32,6 +33,18 @@ def handle_boards():
                 "owner": new_board.owner
             }), 201)
 
+@board_bp.route("/<board_id>/cards", methods=["GET", "POST"])
+def handle_board_card(board_id):
+    if request.method == "GET":
+        
+        cards = Card.query.filter(Card.board_id == board_id)
+
+        return jsonify([card.to_json() for card in cards])
+
+    if request.method == "POST":
+        pass
+
+
 # Some notes about routes
 #   - POST /boards/board_id/cards
 #     - Create new card for a specific board
@@ -42,3 +55,4 @@ def handle_boards():
 #   - DELETE /cards/card_id
 #     - Delete the selected card
 #   - PATCH /cards/card_id
+#       - Like card
