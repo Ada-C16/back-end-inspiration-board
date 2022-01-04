@@ -39,19 +39,21 @@ def handle_board_card(board_id):
         
         cards = Card.query.filter(Card.board_id == board_id)
 
-        return jsonify([card.to_json() for card in cards])
+        return jsonify([card.to_json() for card in cards]), 200
 
     if request.method == "POST":
-        pass
+        
+        request_body = request.get_json()
+
+        new_card = Card(message=request_body["message"], board_id=board_id)
+
+        db.session.add(new_card)
+        db.session.commit()
+
+        return make_response(new_card.to_json(), 201)
 
 
 # Some notes about routes
-#   - POST /boards/board_id/cards
-#     - Create new card for a specific board
-#       - request body includes:
-#         - message
-#   - GET /boards/board_id/cards (repeated from above)
-#     - Return a list of cards [ { card_id: card_id, message: message, likes_count: likes_count }]
 #   - DELETE /cards/card_id
 #     - Delete the selected card
 #   - PATCH /cards/card_id
