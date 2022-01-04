@@ -3,6 +3,9 @@ from flask.helpers import make_response
 from app.models.board import Board
 from app import db
 from app.common_functions.check_request_body import check_request_body
+from app.common_functions.check_for_id import get_id
+from app.models.card import Card
+from app.models.board import Board
 
 board_bp = Blueprint("board", __name__, url_prefix="/boards")
 
@@ -34,4 +37,10 @@ def get_all_boards():
         )
     
     return make_response(jsonify(board_response), 200)
+
+@board_bp.route("/<board_id>/cards", methods=["GET"])
+def get_cards_by_board_id(board_id):
+    card = get_id(board_id, Card, str_repr="Card")
+
+    return make_response(jsonify(card.to_dict_with_rentals()), 200)
 
