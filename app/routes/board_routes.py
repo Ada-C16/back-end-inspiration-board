@@ -41,5 +41,16 @@ def get_all_boards():
 @board_bp.route("/<board_id>/cards", methods=["GET"])
 def get_cards_by_board_id(board_id):
     board = get_id(board_id, Board, str_repr="Board")
+    # print(board, "board")
+    
+    # result = []
+    # for cards in self.card:
+    #     result.append({
+    #         "id": cards.id, 
+    #         "board_id": self.board_id,
+    #         "message": cards.message,
+    #         "like_count": cards.like_count
+    #         }        
+    #     )
     return make_response(jsonify(board.to_dict_with_cards()), 200)
 

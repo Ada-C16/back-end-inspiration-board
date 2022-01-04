@@ -88,11 +88,11 @@ def update_card(card_id):
     request_body = request.get_json()
 
     # if "like_count" in request_body:
-    card.like_count = card.like_count+1
+    card.like_count += 1
 
     
     db.session.commit()
-    return make_response({"card": card})
+    return make_response("card updated", 200)
 
 
     
