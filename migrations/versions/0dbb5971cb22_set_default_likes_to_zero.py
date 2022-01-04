@@ -1,8 +1,8 @@
-"""new models with connections
+"""set default likes to zero
 
-Revision ID: 4864203a7110
+Revision ID: 0dbb5971cb22
 Revises: 
-Create Date: 2022-01-03 17:31:04.064171
+Create Date: 2022-01-04 12:12:47.422816
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4864203a7110'
+revision = '0dbb5971cb22'
 down_revision = None
 branch_labels = None
 depends_on = None
