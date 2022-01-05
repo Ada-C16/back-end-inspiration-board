@@ -13,7 +13,9 @@ def test_create_board(client):
     # Assert
     assert response.status_code == 201
     assert response_body == {
-        "message": f"Created Fancy new board successfully."
+            "board_id": 1,
+            "title": "Fancy new board",
+            "owner": "Pine Prez"
     }
 
 def test_create_board_no_title(client):
@@ -98,3 +100,32 @@ def test_get_three_saved_boards(client, three_boards):
             "owner": "Anya"
             } 
     ]
+
+
+
+### DELETE TEST: /boards ENDPOINT ###
+def test_delete_one_board_from_one_saved_board(client, one_board):
+    # Act
+    response = client.delete("/boards/1")
+    response_body = response.get_json()
+    check_for_deletion = client.get("/boards")
+    check_response_body = check_for_deletion.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert len(check_response_body) == 0
+    assert check_response_body == []
+
+def test_delete_one_board_from_three_saved_boards(client, three_boards):
+    # Act
+    response = client.delete("/boards/3")
+    response_body = response.get_json()
+    check_for_deletion = client.get("/boards")
+    check_response_body = check_for_deletion.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert len(check_response_body) == 2
+    assert response_body == {
+        "message": f"Board 3 was successfully deleted"
+    }
