@@ -18,6 +18,7 @@ class Card(db.Model):
     @classmethod
     def from_dict(cls, request_body):
         card = Card(
+            board_id=request_body["board_id"],
             message=request_body["message"],
             likes_count=request_body["likes_count"]
         )
