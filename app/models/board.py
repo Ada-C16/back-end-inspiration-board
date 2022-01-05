@@ -14,7 +14,6 @@ class Board(db.Model):
             "board_id": self.board_id
         }
 
-
     @classmethod
     def from_dict(cls, req):
         is_invalid_req = cls.check_invalid_req(req)
@@ -39,6 +38,14 @@ class Board(db.Model):
             }
         return False
 
+    def get_all_cards(self):
+        return [card.to_dict() for card in self.cards if not card.deleted_at]
     
-    # get_cards
-    # checking id/getting board
+    @classmethod
+    def get_board(cls, id):
+        try:
+            int(id)
+        except ValueError:
+            return False
+        board = cls.query.get_or_404(id)
+        return board

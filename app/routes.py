@@ -34,7 +34,7 @@ def read_all_boards():
     resp = [board.to_dict() for board in boards]
     return jsonify(resp), 200
 
-# TODO errorhandling ->  invalid keys in req body, invalid id for board
+# TODO errorhandling ->  invalid keys in req body, invalid id for board 
 # TODO encapsulation -> from_json classmethod for card, to_dict instance method
 @boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card(board_id):
@@ -57,20 +57,12 @@ def create_card(board_id):
 
     return jsonify(resp), 201
 
-
-# TODO errorhandling -> invalid board id
-# TODO encapsulation -> board method using a list comprehension for getting all cards, that list comprehension will use card's to_dict method
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
 def read_all_cards(board_id):
-    board = Board.query.get_or_404(board_id)
-    resp = []
-    for card in board.cards:
-        if not card.deleted_at:
-            resp.append({
-                "card_id": card.card_id,
-                "message": card.message,
-                "likes_count": card.likes_count
-            })
+    board = Board.get_board(board_id)
+    if not board:
+        return jsonify({"error": "ID must be an integer"}), 400
+    resp = board.get_all_cards()
     return jsonify(resp), 200
 
 

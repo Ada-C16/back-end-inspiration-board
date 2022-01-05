@@ -10,6 +10,12 @@ class Card(db.Model):
     deleted_at = db.Column(db.DateTime, nullable=True, default=None)
 
     # to_dict
+    def to_dict(self):
+        return {
+            "message": self.message,
+            "card_id": self.card_id,
+            "likes_count": self.card_id
+        }
     # from_dict
     # liking
     # checking card_id
