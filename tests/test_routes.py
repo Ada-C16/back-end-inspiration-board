@@ -172,3 +172,4 @@ def test_board_not_found(client):
     # Assert
     assert response.status_code == 404
     assert response_body == {'message': 'Board 1 was not found'}
+
