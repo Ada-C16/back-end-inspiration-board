@@ -36,6 +36,7 @@ def get_boards():
         return list_of_boards(boards), 200
 
     elif request.method == "DELETE":
+        db.session.query(Card).delete()
         db.session.query(Board).delete()
         db.session.commit()
 
