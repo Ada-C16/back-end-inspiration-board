@@ -102,9 +102,3 @@ def handle_card(card_id):
 
         return make_response(card.to_json(), 200)
 
-
-# Some notes about routes
-#   - DELETE /cards/card_id
-#     - Delete the selected card
-#   - PATCH /cards/card_id
-#       - Like card
