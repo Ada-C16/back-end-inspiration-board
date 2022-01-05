@@ -27,6 +27,7 @@ def validate_id(object, id):
     if not item:
         abort(make_response(jsonify({"details": f"Item with id {id} does not exist."}), 400))
 
+
 @board_bp.route("", methods=["GET", "POST"])
 def handle_boards():
     if request.method == "GET":
@@ -51,6 +52,7 @@ def handle_boards():
 
         return make_response(new_board.to_json()), 201
 
+
 @board_bp.route("/<board_id>/cards", methods=["GET", "POST"])
 def handle_board_card(board_id):
 
@@ -73,6 +75,19 @@ def handle_board_card(board_id):
         db.session.commit()
 
         return make_response(new_card.to_json(), 201)
+        
+
+@card_bp.route("/<card_id>", methods=["DELETE"])
+def handle_card(card_id):
+
+    validate_id(Card, card_id)
+    card = Card.query.get(card_id)
+
+    if request.method == "DELETE":
+        db.session.delete(card)
+        db.session.commit()
+
+    return make_response(""), 200
 
 
 # Some notes about routes

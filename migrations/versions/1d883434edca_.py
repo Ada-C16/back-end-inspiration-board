@@ -1,8 +1,8 @@
-"""set default likes to zero
+"""empty message
 
-Revision ID: 0dbb5971cb22
+Revision ID: 1d883434edca
 Revises: 
-Create Date: 2022-01-04 12:12:47.422816
+Create Date: 2022-01-04 19:24:55.083859
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0dbb5971cb22'
+revision = '1d883434edca'
 down_revision = None
 branch_labels = None
 depends_on = None
