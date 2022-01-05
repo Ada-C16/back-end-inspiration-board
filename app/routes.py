@@ -21,7 +21,7 @@ def create_new_board():
 
     db.session.add(new_board)
     db.session.commit()
-    return make_response(jsonify({"message": f"{board_name} board successfully created"})
+    return make_response(jsonify({"message": f"{board_name} board successfully created", "id": new_board.id})
     , 201)
 
 # Gets a list of all existing boards and their ids
@@ -54,6 +54,7 @@ def add_card(board_id):
 def get_cards_for_boards(board_id):
     board = Board.query.get_or_404(board_id)
     stickies = board.get_all_stickies()
+    # stickies = Card.query.filter(Card.board_id==board_num)
     return make_response(jsonify(stickies), 200)
 
 # Deletes an existing board

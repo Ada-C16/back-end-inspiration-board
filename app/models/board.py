@@ -18,8 +18,8 @@ class Board(db.Model):
                 "num_likes": sticky.num_likes,
                 "date": sticky.date.strftime('%b %w, %Y')
             })
-
-        return stickies
+        sorted_stickies = sorted(stickies, key = lambda i: i['id'])
+        return sorted_stickies
 
     @classmethod
     def validate_data(cls, dict):
