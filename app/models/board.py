@@ -16,7 +16,7 @@ class Board(db.Model):
                 "id": sticky.id,
                 "text": sticky.value,
                 "num_likes": sticky.num_likes,
-                "date": sticky.date
+                "date": sticky.date.strftime('%b %w, %Y')
             })
 
         return stickies
