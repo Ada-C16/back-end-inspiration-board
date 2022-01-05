@@ -9,6 +9,9 @@ card_bp = Blueprint('card_bp', __name__, url_prefix="/cards")
 
 #validate data helper function
 def validate_data(request_body, required_attributes):
+
+    if not request_body:
+        abort(make_response(jsonify({"details": f"Request body must include the following fields: {str(required_attributes)}."}), 400))    
     for attribute in required_attributes:
         if attribute not in request_body:
             abort(make_response(jsonify({"details": f"Request body must include {attribute}."}), 400))
