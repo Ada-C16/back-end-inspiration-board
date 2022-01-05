@@ -50,26 +50,6 @@ def update_card(id):
     response = {"card": card.to_dict()}
 
     return jsonify(response), 200
-# @cards_bp.route("/<card_id>", methods=["PUT"])
-# def update_card(card_id):
-#     try:
-
-#         request_body = request.get_json()
-
-#         card = Card.query.get(card_id)
-
-#         if not Card:
-#             return jsonify({"message" : f"Card {card_id} was not found"}), 404
-        
-#         card.message = request_body["message"]
-#         card.likes_count = request_body["likes_count"]
-#         card.board_id = request_body["board_id"]
-
-#         db.session.commit()
-
-#         return jsonify(card.to_dict()), 200
-#     except KeyError:
-#         return jsonify(None), 400
 
 
 #read - GET (1)
