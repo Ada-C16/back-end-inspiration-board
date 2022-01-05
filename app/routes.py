@@ -75,8 +75,23 @@ def handle_board_card(board_id):
         return make_response(new_card.to_json(), 201)
 
 
-# Some notes about routes
-#   - DELETE /cards/card_id
-#     - Delete the selected card
-#   - PATCH /cards/card_id
-#       - Like card
+@card_bp.route("/<card_id>", methods=["DELETE", "PATCH"])
+def handle_card(card_id):
+
+    validate_id(Card, card_id)
+    card = Card.query.get(card_id)
+
+    if request.method == "DELETE":
+        db.session.delete(card)
+        db.session.commit()
+
+        return make_response(""), 200
+    
+    if request.method == "PATCH":
+        required_attributes = ["message"]
+        request_body = validate_data(request.get_json(), required_attributes)
+
+        card.message = request_body["message"]
+        db.session.commit()
+
+        return make_response(card.to_json(), 200)
