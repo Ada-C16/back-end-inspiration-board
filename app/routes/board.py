@@ -46,7 +46,7 @@ def post_board():
     db.session.add(new_board)
     db.session.commit()
 
-    return jsonify({"message": f"Created {new_board.title} successfully."}), 201
+    return jsonify({new_board.to_dict()}), 201
 
 # GET and POST for  /boards/<board_id>/cards
 
