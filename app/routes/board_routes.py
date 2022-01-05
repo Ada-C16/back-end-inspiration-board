@@ -4,11 +4,11 @@ from app.models.board import Board
 from app import db
 from app.common_functions.check_request_body import check_request_body
 from app.common_functions.check_for_id import get_id
-from app.models.card import Card
 from app.models.board import Board
 
 board_bp = Blueprint("board", __name__, url_prefix="/boards")
 
+# CREATE A BOARD
 @board_bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
@@ -26,7 +26,8 @@ def create_board():
 
     return make_response(new_board.to_dict(),200)
 
-@board_bp.route("", methods=["GET"])  # TODO: DO WE WANT THIS SORTED? 
+# READ ALL BOARDS
+@board_bp.route("", methods=["GET"])
 def get_all_boards():
     boards = Board.query.all()
 
@@ -38,9 +39,9 @@ def get_all_boards():
     
     return make_response(jsonify(board_response), 200)
 
+# READ ALL CARDS BY BOARD
 @board_bp.route("/<board_id>/cards", methods=["GET"])
 def get_cards_by_board_id(board_id):
-    card = get_id(board_id, Card, str_repr="Card")
-
-    return make_response(jsonify(card.to_dict_with_rentals()), 200)
+    board = get_id(board_id, Board, str_repr="Board")
+    return make_response(jsonify(board.to_dict_with_cards()), 200)
 
