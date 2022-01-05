@@ -101,8 +101,8 @@ def handle_card(card_id):
             request_body = validate_data(request.get_json(), required_attributes)
 
             card.message = request_body["message"]
-
-        card.likes_count += 1
+        else:
+            card.likes_count += 1
         db.session.commit()
 
         return make_response(card.to_json(), 200)
