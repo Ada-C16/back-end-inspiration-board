@@ -37,11 +37,17 @@ def get_boards():
 # GET /boards/<board_id> Gets data for specific board.
 # POST /boards/<board_id> Creates a new card to a specific board
 # returns a dictionary of the board's data.
-@boards_bp.route("/<board_id>", methods=["GET"])
+@boards_bp.route("/<board_id>", methods=["GET", "DELETE"])
 @require_valid_id
 def one_board(board):
-    return board.board_details(), 200
+    if request.method == "GET":
+        return board.board_details(), 200
 
+    elif request.method == "DELETE":
+        db.session.delete(board)
+        db.session.commit()
+
+        return board.board_details(), 200
 
 # GET /boards/<board_id>/cards Gets all cards assigned to a specific board.
 # returns a dictionary of cards data for the board.
