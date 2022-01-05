@@ -2,8 +2,26 @@ from flask import Blueprint, request, jsonify, make_response
 from app import db
 from app.models.board import Board
 from app.models.card import Card
+from .helper_functions import get_id
 
 card_bp = Blueprint("card", __name__, url_prefix="/cards")
 
-# @card_bp.route("/<board_id>/cards", methods=["POST"])
-# def create_card(board_id):
+# # DELETE SINGLE CARD
+@card_bp.route("/<card_id>", methods=["DELETE"])
+def delete_card(card_id): 
+    card = get_id(card_id, Card)
+    db.session.delete(card)
+    db.session.commit()
+
+    return "This card will miss you :(", 200
+
+
+# @card_bp.route("/<card_id>/like", methods=["PUT"])
+# def add_like(card_id):
+#     card = get_id(card_id, Card)
+#     request_body = request.get_json()
+#     
+#     card.likes = request_body["likes"]
+#     card.inc_like()
+    
+#     db.session.commit()
