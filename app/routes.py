@@ -93,35 +93,17 @@ def handle_card(card_id):
         return make_response(""), 200
     
     if request.method == "PATCH":
-        # required_attributes = ["message"]
-        # request_body = validate_data(request.get_json(), required_attributes)
 
-        # card.message = request_body["message"]
+        # optionally update message
+        request_body = request.get_json()
+        if request_body:
+            required_attributes = ["message"]
+            request_body = validate_data(request.get_json(), required_attributes)
+
+            card.message = request_body["message"]
+
         card.likes_count += 1
         db.session.commit()
 
         return make_response(card.to_json(), 200)
 
-<<<<<<< HEAD
-=======
-@card_bp.route("/<card_id>", methods=["DELETE", "PATCH"])
-def handle_card(card_id):
-
-    validate_id(Card, card_id)
-    card = Card.query.get(card_id)
-
-    if request.method == "DELETE":
-        db.session.delete(card)
-        db.session.commit()
-
-        return make_response(""), 200
-    
-    if request.method == "PATCH":
-        required_attributes = ["message"]
-        request_body = validate_data(request.get_json(), required_attributes)
-
-        card.message = request_body["message"]
-        db.session.commit()
-
-        return make_response(card.to_json(), 200)
->>>>>>> 5f1b71feec2b2db6bcbe6081a7e3ff8a230fd51e
