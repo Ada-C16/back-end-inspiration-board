@@ -7,7 +7,6 @@ class Card(db.Model):
     message = db.Column(db.String)
     likes_count = db.Column(db.Integer, default=0)
     board_id = db.Column(db.Integer, db.ForeignKey('board.board_id'))
-    deleted = db.Column(db.Boolean, default=False)
     deleted_at = db.Column(db.DateTime, nullable=True, default=None)
 
     def to_dict(self):
