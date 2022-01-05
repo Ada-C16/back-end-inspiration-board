@@ -39,14 +39,11 @@ def post_board():
         title=data["title"],
         owner=data["owner"]
     )
-    # TODO: Do we not need to include 'card=' here? It's blank
-        # until a user adds a new one? My guess is card is blank
-        # at the point of the POST request/board creation...
 
     db.session.add(new_board)
     db.session.commit()
 
-    return jsonify({new_board.to_dict()}), 201
+    return jsonify(new_board.to_dict()), 201
 
 # GET and POST for  /boards/<board_id>/cards
 @bp.route("/<board_id>/cards", methods=["GET", "POST"])
