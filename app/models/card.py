@@ -4,7 +4,7 @@ from flask import current_app
 
 class Card(db.Model):
     # rename to just id on both models - from Ansel
-    card_id = db.Column(db.Integer, primary_key=True)
+    card_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     message = db.Column(db.String)
     likes_count = db.Column(db.Integer, default=0)
     board_id = db.Column(db.Integer, db.ForeignKey(
