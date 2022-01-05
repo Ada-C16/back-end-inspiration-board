@@ -23,14 +23,15 @@ def add_like_to_card(card_id):
         return jsonify({"message": f"Card {card_id} was not found"}), 404
 # are we expecting the front end to send a specfic number or will it be sending
 # a +1 to the likes_count and we need to incremement the variable in the database
-    else:
-        form_data = request.get_json()
-        try:
-            form_data["likes_count"]
-        except:
-            return jsonify({"message": "Request body must include likes_count"}), 400
+    # else:
+    #     form_data = request.get_json()
+    #     try:
+    #         form_data["likes_count"]
+    #     except:
+    #         return jsonify({"message": "Request body must include likes_count"}), 400
             
-        card.likes_count = form_data["likes_count"]
-        db.session.commit()
-
-        return jsonify(card.create_card_dict()), 200
+    #     card.likes_count = form_data["likes_count"]
+        
+    card.likes_count += 1
+    db.session.commit()
+    return jsonify(card.create_card_dict()), 200
