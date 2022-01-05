@@ -50,7 +50,7 @@ def create_new_board():
 def delete_all_boards_but_default():
     """Deletes all boards and cards associated with boards from database, 
     except for the default board."""
-    boards = Board.query.filter(Board.board_id!=1).all()
+    boards = Board.query.filter(Board.board_id!=2).all()
     
     for board in boards: 
         if board.cards:
