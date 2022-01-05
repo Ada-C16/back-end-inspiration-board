@@ -52,10 +52,12 @@ def one_board(board):
         return board.board_details(), 200
 
     elif request.method == "DELETE":
+
+        db.session.query(Card).filter(Card.board_id==board.board_id).delete()
         db.session.delete(board)
         db.session.commit()
 
-        return board.board_details(), 200
+        return {"details": "it worked"}, 200
 
 # GET /boards/<board_id>/cards Gets all cards assigned to a specific board.
 # POST /boards/<board_id>/cards Creates a new card to a specific board
@@ -88,4 +90,3 @@ def cards_of_one_board(board):
 
         return new_card.card_details(), 200
 
-# Enhancement ideas - DELETE, PUT/PATCH board info
