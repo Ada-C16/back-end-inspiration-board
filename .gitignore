@@ -141,4 +141,3 @@ dmypy.json
 cython_debug/
 
 # Migrations
-/migrations
