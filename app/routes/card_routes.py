@@ -20,7 +20,7 @@ def create_card():
     new_card = Card(
         board_id=request_body["board_id"],
         message=request_body["message"],
-        like_count=request_body["like_count"]
+        like_count=0
         )
 
     db.session.add(new_card)
