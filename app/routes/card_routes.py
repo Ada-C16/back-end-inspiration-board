@@ -21,7 +21,7 @@ def get_id(id, model, str_repr):
     return model_variable
 
 
-def chek_request_body(request_body_parameters):
+def check_request_body(request_body_parameters):
     request_body = request.get_json()
     for parameter in request_body_parameters:
         if parameter not in request_body:
@@ -43,7 +43,7 @@ def create_card():
     request_body = request.get_json()
 
     request_parameters = ["board_id", "message", "like_count"]
-    chek_request_body(request_parameters)
+    check_request_body(request_parameters)
 
     new_card = Card(
         board_id=request_body["board_id"],
@@ -85,7 +85,7 @@ def delete_card(card_id):
 @card_bp.route("/<card_id>/like", methods=["PUT"])
 def update_card(card_id):
     card = get_id(card_id, Card, str_repr="Card")
-    request_body = request.get_json()
+    # request_body = request.get_json()
 
     # if "like_count" in request_body:
     card.like_count = card.like_count+1
