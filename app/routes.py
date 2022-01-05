@@ -36,6 +36,42 @@ def create_card():
 
         return jsonify([response]), 400
 
+#update - PATCH
+@cards_bp.route("/<id>", methods=["PATCH"])
+def update_card(id):
+    request_body = request.get_json()
+    card = Card.query.get(id)
+    if card is None:
+        return jsonify(None), 404
+
+    card.likes_count = request_body["likes_count"]
+    db.session.commit()
+
+    response = {"card": card.to_dict()}
+
+    return jsonify(response), 200
+# @cards_bp.route("/<card_id>", methods=["PUT"])
+# def update_card(card_id):
+#     try:
+
+#         request_body = request.get_json()
+
+#         card = Card.query.get(card_id)
+
+#         if not Card:
+#             return jsonify({"message" : f"Card {card_id} was not found"}), 404
+        
+#         card.message = request_body["message"]
+#         card.likes_count = request_body["likes_count"]
+#         card.board_id = request_body["board_id"]
+
+#         db.session.commit()
+
+#         return jsonify(card.to_dict()), 200
+#     except KeyError:
+#         return jsonify(None), 400
+
+
 #read - GET (1)
 @cards_bp.route("/<card_id>", methods=["GET"])
 def get_card(card_id):
@@ -91,6 +127,8 @@ def post_board():
         }
 
         return jsonify(response), 400
+
+
 
 #read (1) - GET
 @boards_bp.route("/<board_id>", methods=["GET"])
