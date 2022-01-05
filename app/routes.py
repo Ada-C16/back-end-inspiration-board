@@ -3,6 +3,8 @@ from app import db
 from app.models.board import Board
 from app.models.card import Card
 from datetime import datetime, timezone
+import os
+import requests
 
 
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
@@ -36,6 +38,12 @@ def read_all_boards():
 def create_card(board_id):
     # optional enhancement: send slack message whenever a card is created
     req = request.get_json()
+    SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
+    SLACK_CHANNEL_ID = os.environ.get("SLACK_CHANNEL_ID")
+    path = "https://slack.com/api/chat.postMessage"
+    headers = {
+        "Authorization": f"Bearer {SLACK_BOT_TOKEN}"
+    }
 
     board = Board.get_board(board_id)
     if not board:
@@ -50,6 +58,11 @@ def create_card(board_id):
             db.session.add(resp)
             db.session.commit()
             resp = resp.to_dict()
+            req_body = {
+                "channel": SLACK_CHANNEL_ID,
+                "text": f"Someone just posted a card to the board {board.title} saying: {resp['message']}"
+            }
+            requests.post(path, headers=headers, data=req_body)
     return jsonify(resp), code
 
 
