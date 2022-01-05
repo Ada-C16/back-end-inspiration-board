@@ -24,10 +24,12 @@ def create_board():
     db.session.commit()
 
     # need to return the ID because we already have the title.
-    return jsonify(f"{new_board.title} successfully created."), 201
-
+    # return jsonify(f"{new_board.title} successfully created."), 201
+    return jsonify(new_board.board_dict()), 201
 
 # Create a new card
+
+
 @cards_bp.route("/<board_id>/cards", methods=['POST'])
 # front-end needs a click event to provide API call to backend with board id
 def create_card(board_id):
