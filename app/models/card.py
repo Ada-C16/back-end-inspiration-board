@@ -14,4 +14,3 @@ class Card(db.Model):
             "likes": self.likes,
             "board_id": self.board_id,
         }
-
