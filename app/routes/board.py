@@ -45,6 +45,26 @@ def post_board():
 
     return jsonify(new_board.to_dict()), 201
 
+# DELETE /board/<board_id>
+@bp.route("/<board_id>", methods=["DELETE"])
+def delete_board(board_id):
+    if not board_id.isnumeric():
+        return {"Error": "Board id must be numeric"}, 404
+
+    board_id = int(board_id)
+    board = Board.query.get(board_id)
+
+    if not board:
+        return "Board does not exist", 404
+    
+    db.session.delete(board)
+    db.session.commit()
+
+    return {
+        'message': f'Board {board.board_id} was successfully deleted'
+    }, 200
+
+
 # GET and POST for  /boards/<board_id>/cards
 @bp.route("/<board_id>/cards", methods=["GET", "POST"])
 def handle_cards(board_id):
