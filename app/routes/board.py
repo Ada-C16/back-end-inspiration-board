@@ -49,7 +49,6 @@ def post_board():
     return jsonify({new_board.to_dict()}), 201
 
 # GET and POST for  /boards/<board_id>/cards
-
 @bp.route("/<board_id>/cards", methods=["GET", "POST"])
 def handle_cards(board_id):
     board = Board.query.get(board_id)
