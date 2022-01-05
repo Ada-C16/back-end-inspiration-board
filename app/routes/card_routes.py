@@ -14,7 +14,7 @@ card_bp = Blueprint("card", __name__, url_prefix="/cards")
 def create_card():
     request_body = request.get_json()
 
-    request_parameters = ["board_id", "message", "like_count"]
+    request_parameters = ["board_id", "message"]
     check_request_body(request_parameters)
 
     new_card = Card(
