@@ -93,10 +93,11 @@ def handle_card(card_id):
         return make_response(""), 200
     
     if request.method == "PATCH":
-        required_attributes = ["message"]
-        request_body = validate_data(request.get_json(), required_attributes)
+        # required_attributes = ["message"]
+        # request_body = validate_data(request.get_json(), required_attributes)
 
-        card.message = request_body["message"]
+        # card.message = request_body["message"]
+        card.likes_count += 1
         db.session.commit()
 
         return make_response(card.to_json(), 200)
