@@ -123,3 +123,51 @@ def test_create_card_must_contain_likes_count(client):
     }
     assert Card.query.all() == []
 
+def test_get_boards_no_saved_boards(client):
+    # Act
+    response = client.get("/boards")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert response_body == []
+
+def test_get_boards_one_saved_board(client, one_board):
+    # Act
+    response = client.get("/boards")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert len(response_body) == 1
+    assert response_body == [
+        {
+            "id" : 1,
+            "title" : "Test Board",
+            "owner" : "Sandra"
+        }
+    ]
+def test_get_board(client, one_board):
+    # Act
+    response = client.get("/boards/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 200
+    assert "board" in response_body
+    assert response_body == {
+         {
+            "id" : 1,
+            "title" : "Test Board",
+            "owner" : "Sandra"
+        }
+    }
+
+def test_board_not_found(client):
+    # Act
+    response = client.get("/board/1")
+    response_body = response.get_json()
+
+    # Assert
+    assert response.status_code == 404
+    assert response_body == {'message': 'Board 1 was not found'}
