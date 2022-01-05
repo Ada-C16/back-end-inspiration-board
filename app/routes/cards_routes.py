@@ -33,4 +33,4 @@ def update_likes_count(card):
 
     db.session.commit()
 
-    return jsonify("Likes count updated"), 200
+    return card.card_details(), 200
