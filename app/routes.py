@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response
 from flask.globals import request 
-from app.models.board import Board, to_dict 
-from app.models.card import Card 
+from app.models.board import Board
+from app.models.card import Card
 from app import db
 
 # example_bp = Blueprint('example_bp', __name__)
