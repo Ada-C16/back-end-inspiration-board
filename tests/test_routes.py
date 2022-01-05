@@ -103,7 +103,7 @@ def test_get_three_saved_boards(client, three_boards):
 
 
 
-### DELETE TEST: /boards ENDPOINT ###
+### DELETE TEST: /board/<board_id> ENDPOINT ###
 def test_delete_one_board_from_one_saved_board(client, one_board):
     # Act
     response = client.delete("/boards/1")
