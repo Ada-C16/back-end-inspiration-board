@@ -26,17 +26,24 @@ def create_new_board(request_body):
 # GET /boards Gets a list of all boards.
 # returns a dictionary of boards data.
 # return empty array if no boards have been created.
-@boards_bp.route("", methods=["GET"])
+# DELETE /boards Deletes all boards
+# returns message confirming deletion
+@boards_bp.route("", methods=["GET", "DELETE"])
 def get_boards():
+    if request.method == "GET":
+        boards = Board.query.all()
 
-    boards = Board.query.all()
+        return list_of_boards(boards), 200
 
-    return list_of_boards(boards), 200
+    elif request.method == "DELETE":
+        db.session.query(Board).delete()
+        db.session.commit()
 
+        return {"details": "All boards deleted"}, 200
 
 # GET /boards/<board_id> Gets data for specific board.
-# POST /boards/<board_id> Creates a new card to a specific board
-# returns a dictionary of the board's data.
+# DELETE /boards/<board_id> Deletes a specific board.
+# returns a dictionary of board's data
 @boards_bp.route("/<board_id>", methods=["GET", "DELETE"])
 @require_valid_id
 def one_board(board):
@@ -50,6 +57,7 @@ def one_board(board):
         return board.board_details(), 200
 
 # GET /boards/<board_id>/cards Gets all cards assigned to a specific board.
+# POST /boards/<board_id>/cards Creates a new card to a specific board
 # returns a dictionary of cards data for the board.
 @boards_bp.route("/<board_id>/cards", methods=["GET","POST"])
 @require_valid_id
