@@ -5,6 +5,7 @@ from app.models.card import Card
 
 # example_bp = Blueprint('example_bp', __name__)
 board_bp = Blueprint('board_bp', __name__, url_prefix="/boards")
+card_bp = Blueprint('card_bp', __name__, url_prefix="/cards")
 
 #validate data helper function
 def validate_data(request_body, required_attributes):
@@ -12,6 +13,19 @@ def validate_data(request_body, required_attributes):
         if attribute not in request_body:
             abort(make_response(jsonify({"details": f"Request body must include {attribute}."}), 400))
     return request_body
+
+def validate_id(object, id):
+
+    try:
+        int(id) == id
+
+    except ValueError:
+        abort(make_response(jsonify({"details": f"{id} is not a valid id."}), 400))
+
+    item = object.query.get(id)
+
+    if not item:
+        abort(make_response(jsonify({"details": f"Item with id {id} does not exist."}), 400))
 
 @board_bp.route("", methods=["GET", "POST"])
 def handle_boards():
@@ -39,6 +53,9 @@ def handle_boards():
 
 @board_bp.route("/<board_id>/cards", methods=["GET", "POST"])
 def handle_board_card(board_id):
+
+    validate_id(Board, board_id)
+
     if request.method == "GET":
         
         cards = Card.query.filter(Card.board_id == board_id)
@@ -47,7 +64,8 @@ def handle_board_card(board_id):
 
     if request.method == "POST":
         
-        request_body = request.get_json()
+        required_attributes = ["message"]
+        request_body = validate_data(request.get_json(), required_attributes)
 
         new_card = Card(message=request_body["message"], board_id=board_id)
 
