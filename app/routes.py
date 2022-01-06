@@ -5,7 +5,6 @@ from app.models.card import Card
 from .helper_functions import *
 
 board_bp = Blueprint("boards", __name__, url_prefix="/boards")
-# card_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
 ####---------------------------------------------------####
 ####----------------- BOARD ENDPOINTS -----------------####
@@ -59,7 +58,7 @@ def delete_all_boards_but_default():
 
         delete_from_database(board)
 
-    return {"All boards but one were deleted. Remaining board ID": 1}, 200
+    return {"id": 1}, 200
 
 ####---------------------------------------------------####
 ####------------------ CARD ENDPOINTS -----------------####
@@ -71,8 +70,6 @@ def update_card_likes(board_id, card_id):
     Returns 400 if invalid ID or 404 if card or board don't exist."""
     card = valid_id(Card, card_id)
     board = valid_id(Board, board_id)
-    # request_body = request.get_json()
-    # valid_input(request_body,Card)
 
     card.likes_count += 1
     db.session.commit()
