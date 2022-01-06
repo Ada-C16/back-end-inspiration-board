@@ -31,6 +31,9 @@ def like_card(card_id):
     card.likes_count +=1
 
     db.session.commit()
-    return ({"message": "+1 Like!"}),200
+    return ({
+        "message": "+1 Like!",
+        "likes_count": card.likes_count
+        }),200
 
 
