@@ -58,7 +58,7 @@ def delete_all_boards_but_default():
 
         delete_from_database(board)
 
-    return {"id": 1}, 200
+    return {"id": 2}, 200
 
 ####---------------------------------------------------####
 ####------------------ CARD ENDPOINTS -----------------####
