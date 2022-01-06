@@ -23,6 +23,10 @@ class Board(db.Model):
             abort(400, "Request body must contain title")
         if "owner" not in req:
             abort(400, "Request body must contain owner")
+        if not req["title"]:
+            abort(400, "Board must have a non-empty title")
+        if not req["owner"]:
+            abort(400, "Board must have a non-empty owner")
 
     def get_all_cards(self):
         return [card.to_dict() for card in self.cards if not card.deleted_at]

@@ -9,12 +9,7 @@ import requests
 boards_bp = Blueprint("boards", __name__, url_prefix="/boards")
 cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 
-# TODO routes/methods:
-# OPTIONAL: DELETE /boards/<board_id>
-# OPTIONAL: PUT /boards/<board_id>
-# OPTIONAL: PUT (undo) (we could double up logic)
-
-# LUX WAS HERE!
+# LUX AND BAILEY WERE HERE
 @cards_bp.errorhandler(400)
 @boards_bp.errorhandler(400)
 def handle_invalid_data(error):
@@ -40,7 +35,6 @@ def read_all_boards():
 
 @boards_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card(board_id):
-    # optional enhancement: send slack message whenever a card is created
     req = request.get_json()
 
     board = Board.get_board(board_id)

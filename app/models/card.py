@@ -27,6 +27,10 @@ class Card(db.Model):
     def check_invalid_req(req):
         if "message" not in req:
             abort(400, "Request body must contain message")
+        if not req["message"]:
+            abort(400, "Card must have a non-empty message")
+        if len(req["message"]) > 40:
+            abort(400, "Type less than 40 characters for the message you fool")
 
     def add_like(self):
         if self.deleted_at:
