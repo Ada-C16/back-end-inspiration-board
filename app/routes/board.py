@@ -83,7 +83,7 @@ def handle_cards(board_id):
     )
         db.session.add(new_card)
         db.session.commit()
-        return jsonify({"message": f"New card is successfully created."}), 201
+        return jsonify(new_card.to_dict()), 201
 
     elif request.method == "GET":
         cards_response = []
