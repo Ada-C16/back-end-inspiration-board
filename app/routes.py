@@ -15,6 +15,7 @@ cards_bp = Blueprint("cards", __name__, url_prefix="/cards")
 # OPTIONAL: PUT (undo) (we could double up logic)
 
 # LUX WAS HERE!
+@cards_bp.errorhandler(400)
 @boards_bp.errorhandler(400)
 def handle_invalid_data(error):
     resp = jsonify({"error": error.description}), 400
