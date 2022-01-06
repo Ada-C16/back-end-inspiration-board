@@ -12,7 +12,10 @@ class Board(db.Model):
         for card in self.cards:
             list_cards.append({"card_id": card.id, "message": card.message, "board_id": card.board_id})
 
-        return list_cards
+        return {"id": self.id,
+                "cards": list_cards,
+            
+        }
 
     def to_dict(self):
         return {

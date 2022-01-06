@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 from app.models.board import Board
 from app.models.card import Card
@@ -26,11 +26,10 @@ board_bp = Blueprint("board", __name__, url_prefix="/boards")
 @board_bp.route("", methods=["POST"])
 def create_board():
     request_body = request.get_json()
-    if "title" not in request_body:
-        return {"details":"Missing title."}, 400
-    elif "owner" not in request_body:
-        return {"details":"Missing owner_name."}, 400
-    
+    if not request_body.get("title"):
+        abort(400, {"details":"Missing title."})
+    elif not request_body.get("owner"):
+        abort(400, {"details":"Missing owner_name."})
     new_board = Board(
         title=request_body["title"],
         owner=request_body["owner"],
