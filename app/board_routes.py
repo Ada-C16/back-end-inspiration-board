@@ -6,21 +6,6 @@ from .helper_functions import get_id
 
 board_bp = Blueprint("board", __name__, url_prefix="/boards")
 
-
-# Create a new board, by filling out a form. The form includes "title" and "owner" name of the board.
-
-# See an error message if I try to make a new board with an empty/blank/invalid/missing "title" or "owner" input.
-
-# All error messages can look like a new section on the screen, a red outline around the input field, and/or disabling the input, as long as it's visible
-#HELPER FUNCTIONS
-
-# def valid_int(number, parameter_type):
-#     try:
-#         number = int(number)
-#     except:
-#         abort(400, {"error": f"{parameter_type} must be an int"})
-
-
 #BOARD ROUTES
 # CREATE BOARD
 @board_bp.route("", methods=["POST"])
@@ -64,7 +49,6 @@ def read_board(board_id):
 
 @board_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card(board_id):
-# board id -> get from React (selectBoard)
     board = get_id(board_id, Board)
     request_body = request.get_json()
     new_card = Card(
