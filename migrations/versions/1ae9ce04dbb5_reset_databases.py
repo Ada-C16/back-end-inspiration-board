@@ -1,8 +1,8 @@
-"""empty message
+"""reset databases
 
-Revision ID: 1acdc78da9cf
-Revises: 5858d70631fd
-Create Date: 2021-12-23 12:29:41.938764
+Revision ID: 1ae9ce04dbb5
+Revises: 
+Create Date: 2022-01-06 12:55:39.044770
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1acdc78da9cf'
-down_revision = '5858d70631fd'
+revision = '1ae9ce04dbb5'
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -25,7 +25,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('board_id')
     )
     op.create_table('card',
-    sa.Column('card_id', sa.Integer(), nullable=False),
+    sa.Column('card_id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('message', sa.String(), nullable=True),
     sa.Column('likes_count', sa.Integer(), nullable=True),
     sa.Column('board_id', sa.Integer(), nullable=False),
