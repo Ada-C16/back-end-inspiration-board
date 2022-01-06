@@ -40,20 +40,6 @@ def post_one_card():
         return(new_card.convert_to_dict()), 201
 
 
-# this end point is returning a list of all Card objects (from the db) that have been jsonified
-
-
-@cards_bp.route("", methods=["GET"])
-def get_all_cards():
-    # querying db for all cards then storing that list of objects in local cards variable
-    cards = Card.query.all()
-    cards_response = []
-    # looping through each card, converting to requested format (dict) and adding to
-    # card_response which will be list of dicts
-    for card in cards:
-        cards_response.append(card.convert_to_dict())
-    return jsonify(cards_response), 200
-
 
 @cards_bp.route("/<card_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
 def CRUD_one_card(card_id):
@@ -118,23 +104,6 @@ def get_all_boards():
     return jsonify(boards_response), 200
 
 
-@boards_bp.route("/<board_id>", methods=["GET", "PUT", "DELETE", "PATCH"])
-def CRUD_one_board(board_id):
-    # either get Board back fr db or None, board here is an object
-    board = Board.query.get(board_id)
-    if board is None:
-        return make_response({"message": f"Board {board_id} was not found"}, 404)
-    if request.method == "GET":
-        return board.convert_board_to_dict()
-
-    if request.method == "DELETE":
-        # query db for specific board object by the board id
-        # if Board.query.filter_by(id=board_id):
-        db.session.delete(board)
-        db.session.commit()
-        return make_response({'message': f"Board {board.id} was deleted"}, 200)
-
-
 @boards_bp.route("/<board_id>/cards", methods=["GET"])
 def get_all_cards_for_one_board(board_id):
     if not Board.query.get(board_id):
@@ -158,17 +127,4 @@ def get_all_cards_for_one_board(board_id):
         cards = Board.query.get(board_id).cards
     return jsonify([card.convert_to_dict() for card in cards]), 200
 
-    # query Board table using board_id
-    # board_query = Board.query.get(board_id)
-    # # guard clause to check the board_id is valid
-    # if board_query:
-    # # query and return all Card objects with the specified board_id as their foreign key
-    # #     cards_for_boards = Card.query.filter_by(board_id=board_id).all()
-    # # iterate through the list of returned Card objects, use helper function to convert to dict
-    # # and store in list named cards_response.  Need objects to be dicts so front end can access their data
-    #     cards_response = []
-    #     for card in cards_for_boards:
-    #         cards_response.append(card.convert_to_dict())
-    #     return jsonify(cards_response), 200
-    # else:
-    #     return jsonify({"message": f"Board {board_id} was not found"}), 404
+    
