@@ -38,7 +38,7 @@ def create_board():
     db.session.add(new_board)
     db.session.commit()
 
-    return make_response(f"Board {new_board.id} created!"), 201
+    return make_response(new_board.to_dict(), 201)
 
 # READ ALL BOARDS
 @board_bp.route("", methods=["GET"])
