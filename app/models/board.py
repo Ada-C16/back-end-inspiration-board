@@ -10,11 +10,13 @@ class Board(db.Model):
     def read_cards(self):
         list_cards = []
         for card in self.cards:
-            list_cards.append({"card_id": card.id, "message": card.message, "board_id": card.board_id})
+            list_cards.append({"card_id": card.id, "message": card.message, "likes": card.likes})
 
-        return {"id": self.id,
-                "cards": list_cards,
-            
+        return {"title": self.title,
+            "owner_name": self.owner,
+            "cards": list_cards,
+            "id": self.id
+                   
         }
 
     def to_dict(self):
