@@ -15,8 +15,6 @@ def handle_boards():
         if "owner" not in request_body or request_body["owner"] == "":
             return jsonify(details="Invalid request, an owner is required."), 400
 
-        # print(request_body["title"])
-        # print(request_body["owner"])
         new_board = Board(title=request_body["title"], owner=request_body["owner"])
 
 
@@ -24,9 +22,6 @@ def handle_boards():
         db.session.add(new_board)
         db.session.commit()
 
-         # Updated POST request return statement to return data instead of a statement per front-end team request
-        # previous code:
-        # return make_response(f"Board {new_board.title} successfully created", 201)
         return jsonify({"board":{"board_id": new_board.id, "owner": new_board.owner, "title": new_board.title}}), 201
 
     if request.method == "GET":
@@ -50,10 +45,6 @@ def handle_board(id):
         return make_response(f"Board #{id} successfully deleted")
 
 
-# Create route for when user selects a specific board to work on 
-# for likes count, will need to have an API for put to update likes
-# add error messages for when board does not exist
-# double check endpoint/routes to make sure it is what front end needs 
 @boards_bp.route("/<id>/cards", methods=["GET", "POST", "DELETE"])
 def handle_board_cards(id):
     board = Board.query.get(id)
@@ -67,10 +58,6 @@ def handle_board_cards(id):
 
         db.session.add(new_card)
         db.session.commit()
-
-        # Updated POST request return statement to return data instead of a statement per front-end team request
-        # previous code:
-        # return make_response(f"A new card was successfully created for board: {id} .", 201)
 
         return jsonify({"card":{"board_id": new_card.board_id, "card_id": new_card.id, "likes_count": new_card.likes_count, "message": new_card.message}}), 201
     
