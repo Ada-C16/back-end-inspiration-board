@@ -109,12 +109,12 @@ def delete_board(board_id):
     board = Board.query.get(board_id)
 
     if not board:
-        return {"message": f"Board {board_id} was not found"}, 404
+        return make_response({"message": f"Board {board_id} was not found"}, 404)
 
     db.session.delete(board)
     db.session.commit()
 
-    return {"board_id": board.id}, 200
+    return make_response({"message": "board deleted successfully"}, 200)
 ##################################
 ##################################
 ########## CARD ROUTES ##########
