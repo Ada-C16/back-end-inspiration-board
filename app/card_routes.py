@@ -16,12 +16,3 @@ def delete_card(card_id):
     return "This card will miss you :(", 200
 
 
-# @card_bp.route("/<card_id>/like", methods=["PUT"])
-# def add_like(card_id):
-#     card = get_id(card_id, Card)
-#     request_body = request.get_json()
-#     
-#     card.likes = request_body["likes"]
-#     card.inc_like()
-    
-#     db.session.commit()

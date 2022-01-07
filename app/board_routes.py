@@ -46,7 +46,7 @@ def read_board(board_id):
 
 
 #CARD ROUTES
-
+# CREATE CARD
 @board_bp.route("/<board_id>/cards", methods=["POST"])
 def create_card(board_id):
     board = get_id(board_id, Board)
