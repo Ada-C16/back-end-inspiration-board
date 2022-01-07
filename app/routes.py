@@ -79,6 +79,31 @@ def update_board(board_id):
     db.session.commit()
     return board.to_dict(), 200
 
+#nested route that gets a specific board and all its cards 
+@board_bp.route("/<board_id>/card", methods=["GET", "POST"])
+def handle_board_card(board_id):
+    board = Board.query.get(board_id)
+    if board is None:
+        return make_response("Board not found", 404)
+    if request.method == "GET":
+        #cards = Card.query.get(board_id)
+        cards = board.card
+        board_card_response = []
+        for card in cards:
+            board_card_response.append(card.to_dict()
+            )
+        return jsonify(board_card_response)
+
+    if request.method == "POST":
+        request_body = request.get_json()
+        new_card = Card(
+            message=request_body["message"],
+            likes_count=request_body["likes_count"],
+            )
+        db.session.add(new_card)
+        db.session.commit()
+        return make_response(f"Card {new_card.message} by {new_card.board.title} successfully created", 201)
+
 @board_bp.route("/<board_id>", methods=["DELETE"])
 def delete_board(board_id): 
     board = Board.query.get(board_id)
@@ -146,22 +171,7 @@ def read_cards():
         response_body.append(card.to_dict())
 
     return jsonify(response_body), 200
-#nested route that gets a specific board and all its cards 
-@board_bp.route("/<board_id>/card", methods=["GET", "POST"])
-def handle_board_card(board_id):
-    board = Board.query.get(board_id=board_id)
-    if board is None:
-        return make_response("Board not found", 404)
 
-    if request.method == "POST":
-        request_body = request.get_json()
-        new_card = Card(
-            message=request_body["message"],
-            likes_count=request_body["likes_count"],
-            )
-        db.session.add(new_card)
-        db.session.commit()
-        return make_response(f"Card {new_card.message} by {new_card.board.title} successfully created", 201)
 
 @card_bp.route("/<card_id>", methods=["PUT", "PATCH"])  
 def update_card(card_id):
