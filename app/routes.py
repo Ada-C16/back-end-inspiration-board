@@ -146,7 +146,7 @@ def read_cards():
         response_body.append(card.to_dict())
 
     return jsonify(response_body), 200
-
+#nested route that gets a specific board and all its cards 
 @board_bp.route("/<board_id>/card", methods=["GET", "POST"])
 def handle_board_card(board_id):
     board = Board.query.get(board_id=board_id)
